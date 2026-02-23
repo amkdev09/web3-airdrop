@@ -18,6 +18,10 @@ export const authRouters = [
     path: "/forgot-password",
     component: asyncComponent(() => import("../pages/auth/ForgotPassword.jsx")),
   },
+  {
+    path: "/verify-otp",
+    component: asyncComponent(() => import("../pages/auth/verifyOtp.jsx")),
+  },
 ];
 
 export const protectedRouters = [

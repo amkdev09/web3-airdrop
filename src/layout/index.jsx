@@ -5,14 +5,10 @@ const AppLayout = (props) => {
   const { children, isBottomNav = false } = props;
 
   return (
-    <React.Fragment>
-      <div
-        className="max-w-120 w-full mx-auto pt-12 px-4"
-      >
-        {children}
-      </div>
+    <section className="mb-32">
+      {children}
       {isBottomNav && <BottomNavigate />}
-    </React.Fragment>
+    </section>
   )
 };
 

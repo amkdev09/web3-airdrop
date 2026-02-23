@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -15,6 +16,7 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigate("/verify-otp?token=1234567890");
     console.log("Login Data:", formData);
   };
 
@@ -45,7 +47,7 @@ export default function LoginPage() {
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border bg-gray-800/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:border-transparent transition-colors border-gray-600"
+              className="w-full px-4 py-3 rounded-lg border bg-gray-800/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:border-transparent transition-colors border-[var(--color-gray-600)]"
             />
           </div>
 
@@ -63,13 +65,13 @@ export default function LoginPage() {
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border bg-gray-800/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:border-transparent transition-colors border-gray-600"
+              className="w-full px-4 py-3 rounded-lg border bg-gray-800/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:border-transparent transition-colors border-[var(--color-gray-600)]"
             />
 
             <div className="flex justify-end mt-2">
               <a
                 href="/forgot-password"
-                className="text-sm text-selsila-green hover:text-selsila-green/80 transition-colors"
+                className="text-sm text-[var(--color-selsila-green)] hover:text-[var(--color-selsila-green)]/80 transition-colors"
               >
                 Forgot Password?
               </a>
@@ -78,7 +80,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-selsila-green text-white font-semibold rounded-lg hover:bg-selsila-green/90 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-2"
+            className="w-full py-3 px-4 bg-[var(--color-selsila-green)] text-white font-semibold rounded-lg hover:bg-[var(--color-selsila-green)]/90 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-2"
           >
             Sign In
           </button>
@@ -91,7 +93,7 @@ export default function LoginPage() {
         </div>
 
         <div className="flex items-center justify-center">
-          <button className="cursor-pointer flex items-center gap-x-2.5 py-3 px-8 rounded-full text-selsila-green bg-selsila-green/20 border border-selsila-green transition-colors hover:bg-selsila-green/30">
+          <button className="cursor-pointer flex items-center gap-x-2.5 py-3 px-8 rounded-full text-[var(--color-selsila-green)] bg-[var(--color-selsila-green)]/20 border border-[var(--color-selsila-green)] transition-colors hover:bg-[var(--color-selsila-green)]/30">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -111,12 +113,12 @@ export default function LoginPage() {
         <div className="text-center">
           <p className="text-gray-400">
             Don't have an account?{" "}
-            <a
-              href="/signup"
-              className="text-selsila-green hover:text-selsila-green/80 font-medium transition-colors"
+            <Link
+              to="/signup"
+              className="text-[var(--color-selsila-green)] hover:text-[var(--color-selsila-green)]/80 font-medium transition-colors"
             >
               Sign Up
-            </a>
+            </Link>
           </p>
         </div>
       </div>

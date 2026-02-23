@@ -7,6 +7,16 @@ body {
   -ms-touch-action: pan-x pan-y;
 }
 
+@font-face {
+  font-family: "Spinnaker";
+  src: url("/src/assets/fonts/Spinnaker-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Wavacorp";
+  src: url("/src/assets/fonts/Wavacorp.otf") format("opentype");
+}
+
 :root {
   --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
