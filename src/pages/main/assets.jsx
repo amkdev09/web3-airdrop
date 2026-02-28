@@ -9,10 +9,10 @@ export default function ProfilePage() {
     return (
         <main className="max-w-120 w-full mx-auto pt-12 px-4">
             <div className="space-y-2 mb-6">
-                <h1 className="text-2xl sm:text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Profile</h1>
-                <p className="text-center text-sm sm:text-base leading-6">Manage your profile information.</p>
+                <h1 className="text-2xl sm:text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Assets</h1>
+                <p className="text-center text-sm sm:text-base leading-6">Manage your assets information.</p>
             </div>
-            <div className="mb-6 w-full bg-orange-500/20 backdrop-blur-md rounded-2xl border border-orange-500/30 p-4">
+            {/* <div className="mb-6 w-full bg-orange-500/20 backdrop-blur-md rounded-2xl border border-orange-500/30 p-4">
                 <div className="flex items-start gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--solar size-5 text-orange-500 shrink-0" width="1em" height="1em" viewBox="0 0 24 24">
                         <path fill="currentColor" fill-rule="evenodd" d="M5.312 10.762C8.23 5.587 9.689 3 12 3s3.77 2.587 6.688 7.762l.364.644c2.425 4.3 3.638 6.45 2.542 8.022S17.786 21 12.364 21h-.728c-5.422 0-8.134 0-9.23-1.572s.117-3.722 2.542-8.022zM12 7.25a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75M12 17a1 1 0 1 0 0-2a1 1 0 0 0 0 2" clip-rule="evenodd"></path>
@@ -22,12 +22,33 @@ export default function ProfilePage() {
                         <a className="block text-orange-500 hover:underline font-semibold text-xs" href="/profile/kyc">Verify Now →</a>
                     </div>
                 </div>
-            </div>
+            </div> */}
             <div className="space-y-6">
                 <div className="relative w-full bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 p-6">
                     <div className="flex flex-col items-center text-center mb-6">
                         <div className="relative size-16 sm:size-20 rounded-full overflow-hidden bg-white/5 mb-4">
-                            <img alt="Profile" loading="lazy" decoding="async" data-nimg="fill" className="object-cover" sizes="100vw" src={userProfile} style={{ position: 'absolute', height: '100%', width: '100%', inset: 0, color: 'transparent' }} />
+                            <div className="absolute inset-0 flex items-center justify-center text-white/35">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    aria-hidden="true"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="size-9 sm:size-11"
+                                >
+                                    <path d="M12 12a4 4 0 1 0-4-4a4 4 0 0 0 4 4" />
+                                    <path d="M4 20a8 8 0 0 1 16 0v1H4z" />
+                                </svg>
+                            </div>
+                            {/* <img
+                                alt="Profile"
+                                loading="lazy"
+                                decoding="async"
+                                data-nimg="fill"
+                                className="object-cover"
+                                sizes="100vw"
+                                src={userProfile}
+                                style={{ position: 'absolute', height: '100%', width: '100%', inset: 0, color: 'transparent' }}
+                            /> */}
                         </div>
                         <div className="min-w-0 w-full">
                             <div className="flex items-center justify-center gap-1.5 mb-1">
@@ -43,7 +64,7 @@ export default function ProfilePage() {
                                     <path fill="currentColor" d="M19 12a1 1 0 1 1-2 0a1 1 0 0 1 2 0"></path>
                                     <path fill="currentColor" fill-rule="evenodd" d="M9.944 3.25h3.112c1.838 0 3.294 0 4.433.153c1.172.158 2.121.49 2.87 1.238c.924.925 1.219 2.163 1.326 3.77c.577.253 1.013.79 1.06 1.47c.005.061.005.126.005.186v3.866c0 .06 0 .125-.004.185c-.048.68-.484 1.218-1.061 1.472c-.107 1.606-.402 2.844-1.326 3.769c-.749.748-1.698 1.08-2.87 1.238c-1.14.153-2.595.153-4.433.153H9.944c-1.838 0-3.294 0-4.433-.153c-1.172-.158-2.121-.49-2.87-1.238c-.748-.749-1.08-1.698-1.238-2.87c-.153-1.14-.153-2.595-.153-4.433v-.112c0-1.838 0-3.294.153-4.433c.158-1.172.49-2.121 1.238-2.87c.749-.748 1.698-1.08 2.87-1.238c1.14-.153 2.595-.153 4.433-.153m10.224 12.5H18.23c-2.145 0-3.981-1.628-3.981-3.75s1.836-3.75 3.98-3.75h1.938c-.114-1.341-.371-2.05-.87-2.548c-.423-.423-1.003-.677-2.009-.812c-1.027-.138-2.382-.14-4.289-.14h-3c-1.907 0-3.261.002-4.29.14c-1.005.135-1.585.389-2.008.812S3.025 6.705 2.89 7.71c-.138 1.028-.14 2.382-.14 4.289s.002 3.262.14 4.29c.135 1.005.389 1.585.812 2.008s1.003.677 2.009.812c1.028.138 2.382.14 4.289.14h3c1.907 0 3.262-.002 4.29-.14c1.005-.135 1.585-.389 2.008-.812c.499-.498.756-1.206.87-2.548M5.25 8A.75.75 0 0 1 6 7.25h4a.75.75 0 0 1 0 1.5H6A.75.75 0 0 1 5.25 8m15.674 1.75H18.23c-1.424 0-2.481 1.059-2.481 2.25s1.057 2.25 2.48 2.25h2.718c.206-.013.295-.152.302-.236V9.986c-.007-.084-.096-.223-.302-.235z" clip-rule="evenodd"></path>
                                 </svg>
-                                <span className="text-sm text-[#D9D9D9]">Wallet Address</span>
+                                <span className="text-sm text-[#D9D9D9]">Referral Link</span>
                             </div>
                             <p className="text-sm text-white/50 font-medium">Not Available</p>
                         </div>
@@ -57,6 +78,70 @@ export default function ProfilePage() {
                             <p className="text-sm text-white/50 font-medium">Amk5419</p>
                         </div>
                     </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-colors"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="size-5 shrink-0"
+                        >
+                            <path d="M12 3v12" />
+                            <path d="m7 10 5 5 5-5" />
+                            <path d="M5 21h14" />
+                        </svg>
+                        <span>Deposit</span>
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-sky-500/15 text-sky-400 hover:bg-sky-500/25 transition-colors"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="size-5 shrink-0"
+                        >
+                            <path d="M12 21V9" />
+                            <path d="m7 14 5-5 5 5" />
+                            <path d="M5 3h14" />
+                        </svg>
+                        <span>Withdraw</span>
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        className="col-span-2 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-violet-500/15 text-violet-400 hover:bg-violet-500/25 transition-colors"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="size-5 shrink-0"
+                        >
+                            <circle cx="12" cy="12" r="9" />
+                            <path d="M12 7v5l3 3" />
+                        </svg>
+                        <span>Transactions History</span>
+                    </button>
                 </div>
                 <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500/20 text-red-500 hover:bg-red-500/30 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--solar size-5" width="1em" height="1em" viewBox="0 0 24 24">

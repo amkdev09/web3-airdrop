@@ -15,7 +15,7 @@ export default function AirdropPage() {
                 </div>
             </div>
             <div className="space-y-3 -mt-3">
-                <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Airdrop</h1>
+                <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Team</h1>
                 <p className="text-center text-sm uppercase tracking-[0.3em]">LISTING PRICE = USD 3</p>
             </div>
             <div className="mt-5">
@@ -50,11 +50,11 @@ export default function AirdropPage() {
                     <div className="grid grid-cols-2 gap-8 auto-rows-auto mt-8">
                         <div className="flex flex-col gap-y-0.5 bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
                             <p className="text-xl font-sans text-center">2.5</p>
-                            <p className="text-xs text-center text-[#D9D9D9]">YOUR HOLDINGS</p>
+                            <p className="text-xs text-center text-[#D9D9D9]">MY DEPOSIT</p>
                         </div>
                         <div className="flex flex-col gap-y-0.5 bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
                             <p className="text-xl font-sans text-center">0</p>
-                            <p className="text-xs text-center text-[#D9D9D9]">YOUR PARTNER</p>
+                            <p className="text-xs text-center text-[#D9D9D9]">TEAM DEPOSIT</p>
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,20 @@ export default function AirdropPage() {
                         <p className="text-sm">Wallet address not set.</p>
                     </div>
                     <div>
-                        <div className="space-y-6"><button disabled="" className="w-full flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed ">claim nft poh</button><button disabled="" className="w-full flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">claim token</button></div>
+                        <p className="text-base text-white">Personal</p>
+                        <div className="grid grid-cols-3 gap-x-2">
+                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Claim</button>
+                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Amount</button>
+                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Reinvest</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-base text-white">Team</p>
+                        <div className="grid grid-cols-3 gap-x-2">
+                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Claim</button>
+                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Amount</button>
+                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Reinvest</button>
+                        </div>
                         <p className="text-xs text-gray-500 text-center mt-3">Complete your identity verification (KYC) in your profile to be eligible for claiming tokens.</p>
                     </div>
                 </div>
@@ -98,7 +111,10 @@ export default function AirdropPage() {
             <div className="mt-10">
                 <div className="space-y-6">
                     <div className="space-y-4">
-                        <p className="text-base text-white">Daily Task</p>
+                        <div className="flex items-center justify-between">
+                            <p className="text-base text-white">Claim</p>
+                            <p className="text-base text-white">Reinvest</p>
+                        </div>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between w-full p-4 rounded-xl border border-selsila-purple bg-white/5 backdrop-blur-md gap-5">
                                 <div className="flex items-center gap-4">

@@ -33,11 +33,11 @@ export const protectedRouters = [
     component: asyncComponent(() => import("../pages/main/home.jsx")),
   },
   {
-    path: "/airdrop",
+    path: "/team",
     isBottomNav: true,
-    label: "AIRDROP",
+    label: "TEAM",
     icon: LiaParachuteBoxSolid,
-    component: asyncComponent(() => import("../pages/main/airdrop.jsx")),
+    component: asyncComponent(() => import("../pages/main/team.jsx")),
   },
   {
     path: "/reward",
@@ -54,11 +54,11 @@ export const protectedRouters = [
     component: asyncComponent(() => import("../pages/main/board.jsx")),
   },
   {
-    path: "/profile",
+    path: "/assets",
     isBottomNav: true,
-    label: "PROFILE",
+    label: "ASSETS",
     icon: CgProfile,
-    component: asyncComponent(() => import("../pages/main/profile.jsx")),
+    component: asyncComponent(() => import("../pages/main/assets.jsx")),
   },
 ];
 

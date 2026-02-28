@@ -1,12 +1,89 @@
-import React from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import cryptoRoadmap from "../../assets/images/crypto-roadmap.webp";
 import selsilaBrandLogo from "../../assets/images/sslogo.png";
 
+const CAROUSEL_CARDS = [
+  {
+    id: "fairlaunch",
+    text: "Fairlaunch is Launch freely, fairly, and efficiently with Selsila's low-cost, user-first token creation protocol.",
+  },
+  {
+    id: "global",
+    text: "Global Expand is Selsila is actively preparing for its upcoming listing on a centralized exchange (CEX), marking a major step forward in its growth journey",
+  },
+  {
+    id: "wallet",
+    text: "Wallet is a digital wallet that lets users store, send, and receive crypto while interacting with decentralized apps (dApps).",
+  },
+  {
+    id: "dex",
+    text: "Selsi Dex Finance is Trade smarter, faster, and easier with SelsiDEX's spot, perp, and copy trading at your fingertips.",
+  },
+  {
+    id: "logo",
+    text: "Selsila is a blockchain-based platform that allows users to create and trade digital assets.",
+  },
+  {
+    id: "logo",
+    text: "Selsila is a blockchain-based platform that allows users to create and trade digital assets.",
+  },
+];
+
+const SWIPE_THRESHOLD = 50;
+const AUTO_SCROLL_MS = 5000;
+
 export default function Home() {
+  const [carouselIndex, setCarouselIndex] = useState(1);
+  const touchStartX = useRef(0);
+  const autoScrollRef = useRef(null);
+
+  const goPrev = useCallback(
+    () => setCarouselIndex((i) => (i - 1 + CAROUSEL_CARDS.length) % CAROUSEL_CARDS.length),
+    []
+  );
+
+  const goNext = useCallback(
+    () => setCarouselIndex((i) => (i + 1) % CAROUSEL_CARDS.length),
+    []
+  );
+
+  const resetAutoScroll = useCallback(() => {
+    if (autoScrollRef.current) clearInterval(autoScrollRef.current);
+    autoScrollRef.current = setInterval(goNext, AUTO_SCROLL_MS);
+  }, [goNext]);
+
+  useEffect(() => {
+    resetAutoScroll();
+    return () => {
+      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
+    };
+  }, [resetAutoScroll]);
+
+  const handleTouchStart = useCallback((e) => {
+    touchStartX.current = e.touches[0].clientX;
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = null;
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const delta = touchStartX.current - endX;
+      if (Math.abs(delta) >= SWIPE_THRESHOLD) {
+        if (delta > 0) goNext();
+        else goPrev();
+      }
+      resetAutoScroll();
+    },
+    [goNext, goPrev, resetAutoScroll]
+  );
+
   return (
     <main className="max-w-120 w-full mx-auto pt-12">
       <div className="text-center flex flex-col gap-3">
-        <h1 className="font-wavacorp text-base tracking-[0.45em]">Selsila Airdrop</h1>
+        <h1 className="font-wavacorp text-base tracking-[0.45em]">UltraDefi</h1>
       </div>
       <div className="px-5 relative mt-8">
         <div className="flex items-center justify-between mb-4">
@@ -44,42 +121,67 @@ export default function Home() {
             <div className="bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
               <p className="text-2xl font-sans text-center">320.3K</p>
             </div>
-            <p className="text-xs text-center">TOTAL USER</p>
+            <p className="text-xs text-center">CRYPTO LIQUIDITY</p>
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
               <p className="text-2xl font-sans text-center">2.9M</p>
             </div>
-            <p className="text-xs text-center">LIVE DISTRIBUTION</p>
+            <p className="text-xs text-center">OUR LIQUIDITY</p>
           </div>
         </div>
         <div className="mt-12 space-y-4 px-5 overflow-x-hidden">
           <p className="text-base text-shadow-purple-green">Selsi Future X Plan</p>
           <div className="relative w-full">
-            <div className="relative h-64 flex items-center justify-center perspective-1000 select-none">
-              <div className="absolute w-52 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-4" style={{ transform: 'translateX(60%) scale(0.85) rotateY(-25deg)', zIndex: 4, opacity: 0.8, filter: 'blur(2px)' }}>
-                <p className="text-sm">wallet is a digital wallet that lets users store, send, and receive crypto while interacting with decentralized apps (dApps).</p>
-              </div>
-              <div className="absolute w-52 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-4" style={{ transform: 'translateX(120%) scale(0.7) rotateY(-35deg)', zIndex: 3, opacity: 0.6, filter: 'blur(4px)' }}>
-                <div className="relative w-24 h-24"><img alt="selsila" loading="lazy" decoding="async" data-nimg="fill" className="object-contain" sizes="100vw" srcSet="/_next/image?url=%2Fselsila-brand-logo.png&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fselsila-brand-logo.png&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fselsila-brand-logo.png&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fselsila-brand-logo.png&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fselsila-brand-logo.png&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fselsila-brand-logo.png&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fselsila-brand-logo.png&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fselsila-brand-logo.png&amp;w=3840&amp;q=75 3840w" src="/_next/image?url=%2Fselsila-brand-logo.png&amp;w=3840&amp;q=75" style={{ position: 'absolute', height: '100%', width: '100%', inset: 0, color: 'transparent' }} />
-                </div>
-                <div className="absolute w-52 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-4" style={{ transform: 'translateX(-120%) scale(0.7) rotateY(35deg)', zIndex: 3, opacity: 0.6, filter: 'blur(4px)' }}>
-                  <p className="text-sm">Selsi Dex Finance is Trade smarter, faster, and easier with SelsiDEX's spot, perp, and copy trading at your fingertips.</p>
-                </div>
-                <div className="absolute w-52 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-4" style={{ transform: 'translateX(-60%) scale(0.85) rotateY(25deg)', zIndex: 4, opacity: 0.8, filter: 'blur(2px)' }}>
-                  <p className="text-sm">Fairlaunch is Launch freely, fairly, and efficiently with Selsila's low-cost, user-first token creation protocol.</p>
-                </div>
-                <div className="absolute w-52 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-4" style={{ transform: 'translateX(0px) scale(1) rotateY(0deg)', zIndex: 5, opacity: 1, filter: 'blur(0px)' }}>
-                  <p className="text-sm">Global Expand is Selsila is actively preparing for its upcoming listing on a centralized exchange (CEX), marking a major step forward in its growth journey</p>
-                </div>
-              </div>
+            <div
+              className="relative h-64 flex items-center justify-center perspective-[1000px] select-none overflow-visible touch-pan-y"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              {CAROUSEL_CARDS.map((card, index) => {
+                const pos = (index - carouselIndex + CAROUSEL_CARDS.length) % CAROUSEL_CARDS.length;
+                const offset = pos > CAROUSEL_CARDS.length / 2 ? pos - CAROUSEL_CARDS.length : pos;
+                const visible = Math.abs(offset) <= 2;
+                const isLeftSide = offset < 0;
+                const isRightSide = offset > 0;
+                const getStyle = () => {
+                  if (!visible) return { transform: `translateX(${offset * 80}%) scale(0.5)`, zIndex: 1, opacity: 0, pointerEvents: "none", filter: "blur(8px)" };
+                  if (offset === -2) return { transform: "translateX(-88%) scale(0.62)", zIndex: 2, opacity: 0.65, filter: "blur(3px)" };
+                  if (offset === -1) return { transform: "translateX(-60%) scale(0.78)", zIndex: 4, opacity: 0.85, filter: "blur(2px)" };
+                  if (offset === 0) return { transform: "translateX(0) scale(1)", zIndex: 5, opacity: 1, filter: "blur(0px)" };
+                  if (offset === 1) return { transform: "translateX(60%) scale(0.78)", zIndex: 4, opacity: 0.85, filter: "blur(2px)" };
+                  if (offset === 2) return { transform: "translateX(88%) scale(0.62)", zIndex: 2, opacity: 0.65, filter: "blur(3px)" };
+                  return {};
+                };
+                const style = getStyle();
+                return (
+                  <div
+                    key={`${card.id}-${index}`}
+                    className="absolute w-52 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-4"
+                    style={style}
+                    onClick={() => (isLeftSide ? goPrev() : isRightSide ? goNext() : null)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (isLeftSide ? goPrev() : isRightSide ? goNext() : null)}
+                    aria-label={isLeftSide ? "Previous card" : isRightSide ? "Next card" : undefined}
+                  >
+                    {card.type === "logo" ? (
+                      <div className="relative w-24 h-24">
+                        <img alt="selsila" loading="lazy" decoding="async" className="object-contain w-full h-full" src={selsilaBrandLogo} />
+                      </div>
+                    ) : (
+                      <p className="text-sm text-white">{card.text}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="mt-12 space-y-4 px-5 overflow-x-hidden">
             <p className="text-base text-shadow-purple-green">Want to know more about SELSILA?</p>
             <div className="space-y-6">
               <div className="max-w-2xl mx-auto relative">
-                <div className="px-5"><button className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">VISIT OUR WEBSITE</button></div>
+                <div className="px-5"><button className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">Start Investing</button></div>
                 <div className="bg-[#141439] rounded-3xl border border-selsila-purple transition-all duration-500 ease-in-out mt-0 max-h-0 opacity-0 transform -translate-y-4 overflow-hidden">
                   <div className="p-6 text-center">
                     <div className="mt-5"><a className="text-center text-sm hover:underline" target="_blank" href="https://selsiworld.com/">https://selsiworld.com/</a></div>
@@ -97,7 +199,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="max-w-2xl mx-auto relative">
-                <div className="px-5"><button className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">SELSILA X SOLANA</button></div>
+                <div className="px-5"><button className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">Telegram</button></div>
                 <div className="bg-[#141439] rounded-3xl border border-selsila-purple transition-all duration-500 ease-in-out mt-0 max-h-0 opacity-0 transform -translate-y-4 overflow-hidden">
                   <div className="p-6 text-center">
                     <div className="mt-5">
