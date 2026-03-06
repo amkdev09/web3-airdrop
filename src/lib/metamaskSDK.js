@@ -15,8 +15,9 @@ export const getMetaMaskSDK = () => {
       },
       // Optional: Infura key improves reliability; add VITE_INFURA_API_KEY in .env
       infuraAPIKey: import.meta.env.VITE_INFURA_API_KEY || undefined,
-      // Support mobile (deeplink/QR) alongside desktop extension
-      extensionOnly: false,
+      // Use only the browser extension to avoid opening metamask:// deep links,
+      // which fail with "scheme does not have a registered handler" on desktop.
+      extensionOnly: true,
     });
   }
   return sdkInstance;

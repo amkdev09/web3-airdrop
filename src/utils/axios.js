@@ -2,7 +2,7 @@ import axios from "axios";
 import { store } from "../store/store";
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/vault`,
   timeout: 2800000,
   headers: {
     "Content-Type": "application/json",

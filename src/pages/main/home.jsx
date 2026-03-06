@@ -17,7 +17,7 @@ const CAROUSEL_CARDS = [
   },
   {
     id: "dex",
-    text: "Selsi Dex Finance is Trade smarter, faster, and easier with SelsiDEX's spot, perp, and copy trading at your fingertips.",
+    text: "UltraDefi Dex Finance is Trade smarter, faster, and easier with SelsiDEX's spot, perp, and copy trading at your fingertips.",
   },
   {
     id: "logo",
@@ -93,7 +93,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-y-0.5 items-center">
             <p className="text-xs font-wavacorp">02</p>
-            <p className="font-sans text-sm">Selsi Launchpad Launching</p>
+            <p className="font-sans text-sm">UltraDefi Launchpad Launching</p>
           </div>
         </div>
         <div className="relative size-full aspect-video z-10">
@@ -102,11 +102,11 @@ export default function Home() {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-y-0.5 items-center z-20">
             <p className="text-xs font-wavacorp">03</p>
-            <p className="font-sans text-sm">Selsi Wallet Launching</p>
+            <p className="font-sans text-sm">UltraDefi Wallet Launching</p>
           </div>
           <div className="flex flex-col gap-y-0.5 items-center z-20">
             <p className="text-xs font-wavacorp">04</p>
-            <p className="font-sans text-sm">SWEG App Launching <br /> &amp; Selsila Public Listing</p>
+            <p className="font-sans text-sm">UltraDefi App Launching <br /> &amp; UltraDefi Public Listing</p>
           </div>
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-12 space-y-4 px-5 overflow-x-hidden">
-          <p className="text-base text-shadow-purple-green">Selsi Future X Plan</p>
+          <p className="text-base text-shadow-purple-green">UltraDefi Future X Plan</p>
           <div className="relative w-full">
             <div
               className="relative h-64 flex items-center justify-center perspective-[1000px] select-none overflow-visible touch-pan-y"

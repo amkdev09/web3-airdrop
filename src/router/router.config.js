@@ -64,6 +64,14 @@ export const protectedRouters = [
     icon: CgProfile,
     component: asyncComponent(() => import("../pages/main/assets.jsx")),
   },
+  {
+    path: "/claim",
+    component: asyncComponent(() => import("../pages/main/claim.jsx")),
+  },
+  {
+    path: "/invest",
+    component: asyncComponent(() => import("../pages/main/invest.jsx")),
+  },
 ];
 
 export const authRouters = commonRouters;

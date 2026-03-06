@@ -153,10 +153,8 @@ function NumberSpinner({
         '& .MuiButton-root': {
           borderColor: AppColors.HLT_NONE,
           minWidth: 0,
-          bgcolor: AppColors.BG_CARD,
           color: AppColors.TXT_MAIN,
           '&:hover': {
-            bgcolor: `${AppColors.GOLD_PRIMARY}20`,
             borderColor: AppColors.GOLD_PRIMARY,
           },
           '&.Mui-disabled': {
@@ -174,7 +172,6 @@ function NumberSpinner({
         border: '1px solid',
         borderRadius: 2,
         overflow: 'hidden',
-        bgcolor: AppColors.BG_CARD,
         borderColor: showError
           ? AppColors.ERROR
           : showSuccess

@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import abstractDistant from "../../assets/images/abstract-distant.webp";
+import userServices from "../../services/userServices";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import abstractDistant from "../../assets/images/abstract-distant.webp";
-import selsilaBrandLogo from "../../assets/images/selsila-brand-horizontal.webp";
-import userServices from "../../services/userServices";
+import { useAuth } from "../../hooks/useAuth";
+import { copyToClipboard } from "../../utils/utils";
+import { GiCheckMark } from "react-icons/gi";
+import { useNavigate } from "react-router-dom";
 
 export default function AirdropPage() {
     const address = useSelector((state) => state.userAuth?.address);
-    console.log('address: ', address);
+    const navigate = useNavigate();
+    const { refferalLink } = useAuth();
+    const [copied, setCopied] = useState(false);
 
-    const { data: vaultSummary, isLoading, isError, error } = useQuery({
+    const handleCopyReferralLink = async () => {
+        await copyToClipboard(refferalLink, setCopied);
+    };
+
+    const { data: vaultSummary, isLoading } = useQuery({
         queryKey: ["vaultSummary", address],
         queryFn: () => userServices.getVaultSummary(),
     });
-    console.log('vaultSummary: ', vaultSummary);
-
-    // if (isLoading) return <div>Loading...</div>;
-    // if (isError) return <div>Error: {error.message}</div>;
 
     return (
         <main className="max-w-120 w-full mx-auto pt-12 px-4">
@@ -35,20 +40,20 @@ export default function AirdropPage() {
             </div>
             <div className="mt-5">
                 <div>
-                    <div className="relative w-full aspect-video overflow-hidden rounded-4xl border-[1.5px] border-selsila-purple">
+                    <div className="relative w-full overflow-hidden rounded-4xl border-[1.5px] border-selsila-purple">
                         <div className="relative w-full h-full">
-                            <img alt="abstract-distant" loading="lazy" decoding="async" data-nimg="fill" className="object-cover" sizes="100vw" src={abstractDistant} style={{ position: 'absolute', height: '100%', width: '100%', inset: 0, color: 'transparent' }} />
+                            <img loading="lazy" className="object-cover" src={abstractDistant} />
                         </div>
                         <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-4 mb-5">
                                 <div className="flex items-center">
                                     <p className="text-base text-[#D9D9D9]">Amk</p>
                                 </div>
-                                <img alt="sesila logo" loading="lazy" width="120" height="40" decoding="async" data-nimg="1" className="ml-auto" src={selsilaBrandLogo} style={{ color: 'transparent' }} />
+                                <p className="font-wavacorp text-lg tracking-[0.15em]">UltraDefi</p>
                             </div>
                             <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
                                 <p className="text-sm text-gray-400">Total Earning</p>
-                                <p className="text-2xl sm:text-4xl text-[#D9D9D9]">$7.50</p>
+                                <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : vaultSummary?.availableIncome ? `$${vaultSummary?.availableIncome}` : "$0"}</p>
                             </div>
                             <div className="mt-auto flex justify-end text-sm">
                                 <button className="flex items-center gap-1 text-[#D9D9D9] text-sm cursor-pointer" id="headlessui-menu-button-«r2»" type="button" aria-haspopup="menu" aria-expanded="false" data-headlessui-state="">
@@ -64,56 +69,71 @@ export default function AirdropPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-8 auto-rows-auto mt-8">
                         <div className="flex flex-col gap-y-0.5 bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
-                            <p className="text-xl font-sans text-center">2.5</p>
+                            <p className="text-xl font-sans text-center">{isLoading ? "..." : vaultSummary?.invested ? `$${vaultSummary?.invested}` : "$0"}</p>
                             <p className="text-xs text-center text-[#D9D9D9]">MY DEPOSIT</p>
                         </div>
                         <div className="flex flex-col gap-y-0.5 bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
-                            <p className="text-xl font-sans text-center">0</p>
+                            <p className="text-xl font-sans text-center">{isLoading ? "..." : vaultSummary?.teamBusiness ? `$${vaultSummary?.teamBusiness}` : "$0"}</p>
                             <p className="text-xs text-center text-[#D9D9D9]">TEAM DEPOSIT</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="my-10">
+            <div className="my-5">
                 <div className="flex flex-col gap-y-4">
                     <div className="flex items-center gap-2 text-[#D9D9D9] text-sm cursor-pointer h-14 border border-white/5 bg-white/10 backdrop-blur-md w-full rounded-xl px-3">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--solar size-5 shrink-0" width="1em" height="1em" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M19 12a1 1 0 1 1-2 0a1 1 0 0 1 2 0"></path>
                             <path fill="currentColor" fillRule="evenodd" d="M9.944 3.25h3.112c1.838 0 3.294 0 4.433.153c1.172.158 2.121.49 2.87 1.238c.924.925 1.219 2.163 1.326 3.77c.577.253 1.013.79 1.06 1.47c.005.061.005.126.005.186v3.866c0 .06 0 .125-.004.185c-.048.68-.484 1.218-1.061 1.472c-.107 1.606-.402 2.844-1.326 3.769c-.749.748-1.698 1.08-2.87 1.238c-1.14.153-2.595.153-4.433.153H9.944c-1.838 0-3.294 0-4.433-.153c-1.172-.158-2.121-.49-2.87-1.238c-.748-.749-1.08-1.698-1.238-2.87c-.153-1.14-.153-2.595-.153-4.433v-.112c0-1.838 0-3.294.153-4.433c.158-1.172.49-2.121 1.238-2.87c.749-.748 1.698-1.08 2.87-1.238c1.14-.153 2.595-.153 4.433-.153m10.224 12.5H18.23c-2.145 0-3.981-1.628-3.981-3.75s1.836-3.75 3.98-3.75h1.938c-.114-1.341-.371-2.05-.87-2.548c-.423-.423-1.003-.677-2.009-.812c-1.027-.138-2.382-.14-4.289-.14h-3c-1.907 0-3.261.002-4.29.14c-1.005.135-1.585.389-2.008.812S3.025 6.705 2.89 7.71c-.138 1.028-.14 2.382-.14 4.289s.002 3.262.14 4.29c.135 1.005.389 1.585.812 2.008s1.003.677 2.009.812c1.028.138 2.382.14 4.289.14h3c1.907 0 3.262-.002 4.29-.14c1.005-.135 1.585-.389 2.008-.812c.499-.498.756-1.206.87-2.548M5.25 8A.75.75 0 0 1 6 7.25h4a.75.75 0 0 1 0 1.5H6A.75.75 0 0 1 5.25 8m15.674 1.75H18.23c-1.424 0-2.481 1.059-2.481 2.25s1.057 2.25 2.48 2.25h2.718c.206-.013.295-.152.302-.236V9.986c-.007-.084-.096-.223-.302-.235z" clipRule="evenodd"></path>
                         </svg>
-                        <p className="text-sm">Wallet address not set.</p>
+                        <p className="text-sm break-all">{address || "Wallet address not set."}</p>
                     </div>
                     <div>
                         <p className="text-base text-white">Personal</p>
                         <div className="grid grid-cols-3 gap-x-2">
-                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Claim</button>
+                            <button onClick={() => navigate("/claim")} className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Claim</button>
                             <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Amount</button>
-                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Reinvest</button>
+                            <button onClick={() => navigate("/invest")} className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Invest</button>
                         </div>
                     </div>
                     <div>
-                        <p className="text-base text-white">Team</p>
-                        <div className="grid grid-cols-3 gap-x-2">
-                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Claim</button>
-                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Amount</button>
-                            <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Reinvest</button>
+                        <p className="text-base font-medium text-white mb-3">Team stats</p>
+                        <p className="text-xs text-white/50 mb-3">Your referral team performance and rank.</p>
+                        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:p-5">
+                            <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 items-baseline">
+                                <span className="text-sm text-white/50">Team business</span>
+                                <span className="text-base sm:text-lg font-semibold text-white tabular-nums text-right">
+                                    {isLoading ? "…" : vaultSummary?.teamBusiness != null ? `$${vaultSummary.teamBusiness}` : "$0"}
+                                </span>
+                                <span className="text-sm text-white/50">Team size</span>
+                                <span className="text-base sm:text-lg font-semibold text-white tabular-nums text-right">
+                                    {isLoading ? "…" : vaultSummary?.directCount ?? "0"}
+                                </span>
+                                <span className="text-sm text-white/50">Rank</span>
+                                <span className="text-base sm:text-lg font-semibold text-white tabular-nums text-right">
+                                    {isLoading ? "…" : vaultSummary?.rank ?? "0"}
+                                </span>
+                            </div>
                         </div>
-                        <p className="text-xs text-gray-500 text-center mt-3">Complete your identity verification (KYC) in your profile to be eligible for claiming tokens.</p>
                     </div>
                 </div>
             </div>
             <div className="flex flex-col gap-y-2 space-y-3">
                 <p className="text-base max-w-xs mx-auto text-white text-center leading-5">The more you share, the more you earn <br /> start referring now!</p>
                 <div className="flex gap-2 bg-[#1A1A52B2] shadow-cyan-neon p-3 rounded-xl border border-selsila-purple undefined">
-                    <p className="text-base text-white truncate">https://selsi.io/?ref=Amk5419</p>
+                    <p className="text-base text-white truncate">{refferalLink || "Connect your wallet to get your referral link."}</p>
                     <div className="ml-auto flex items-center gap-2">
-                        <button>
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--solar size-5 text-white" width="1em" height="1em" viewBox="0 0 24 24">
-                                <g fill="none" stroke="currentColor" strokeWidth="1.5">
-                                    <path d="M6 11c0-2.828 0-4.243.879-5.121C7.757 5 9.172 5 12 5h3c2.828 0 4.243 0 5.121.879C21 6.757 21 8.172 21 11v5c0 2.828 0 4.243-.879 5.121C19.243 22 17.828 22 15 22h-3c-2.828 0-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z"></path>
-                                    <path d="M6 19a3 3 0 0 1-3-3v-6c0-3.771 0-5.657 1.172-6.828S7.229 2 11 2h4a3 3 0 0 1 3 3"></path>
-                                </g>
-                            </svg>
+                        <button onClick={handleCopyReferralLink}>
+                            {copied ? (
+                                <GiCheckMark className="text-green-500 size-5" />
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--solar size-5 text-white" width="1em" height="1em" viewBox="0 0 24 24">
+                                    <g fill="none" stroke="currentColor" strokeWidth="1.5">
+                                        <path d="M6 11c0-2.828 0-4.243.879-5.121C7.757 5 9.172 5 12 5h3c2.828 0 4.243 0 5.121.879C21 6.757 21 8.172 21 11v5c0 2.828 0 4.243-.879 5.121C19.243 22 17.828 22 15 22h-3c-2.828 0-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z"></path>
+                                        <path d="M6 19a3 3 0 0 1-3-3v-6c0-3.771 0-5.657 1.172-6.828S7.229 2 11 2h4a3 3 0 0 1 3 3"></path>
+                                    </g>
+                                </svg>
+                            )}
                         </button>
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--material-symbols size-5 text-white" width="1em" height="1em" viewBox="0 0 24 24">
@@ -128,7 +148,7 @@ export default function AirdropPage() {
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <p className="text-base text-white">Claim</p>
-                            <p className="text-base text-white">Reinvest</p>
+                            <p className="text-base text-white">Invest</p>
                         </div>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between w-full p-4 rounded-xl border border-selsila-purple bg-white/5 backdrop-blur-md gap-5">

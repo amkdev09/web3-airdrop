@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useCallback, useEffect } from 'react';
 import { clearUser, setUserData } from '../store/slices/userAuthSlice';
 import { getMetaMaskSDK } from '../lib/metamaskSDK';
+import { encryptData } from '../utils/encryption';
 
 let rehydrationPromise = null;
 
@@ -102,6 +103,10 @@ export const useAuth = () => {
     return () => provider.removeListener?.('accountsChanged', handleAccountsChanged);
   }, [clearAddress, setAddress]);
 
+  const refferalLink = useCallback(() => {
+    return `${window.location.origin}/?ref=${encodeURIComponent(encryptData(address))}`;
+  }, [address]);
+
   return {
     address,
     isConnected,
@@ -109,6 +114,7 @@ export const useAuth = () => {
     setAddress,
     connectMetaMask,
     disconnectMetaMask,
+    refferalLink: refferalLink(),
   };
 };
 

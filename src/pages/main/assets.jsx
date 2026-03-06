@@ -6,6 +6,7 @@ import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 
 export default function ProfilePage() {
     const navigate = useNavigate();
+    const { refferalLink, address } = useAuth();
     const { disconnectMetaMask } = useAuth();
     const { showSnackbar } = useSnackbar();
     const [logoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -89,21 +90,22 @@ export default function ProfilePage() {
                                 </svg>
                                 <span className="text-sm text-[#D9D9D9]">Referral Link</span>
                             </div>
-                            <p className="text-sm text-white/50 font-medium">Not Available</p>
+                            <p className="break-all text-sm text-white/50 font-medium">{refferalLink || "Not Available"}</p>
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--ci size-4 text-[#D9D9D9]" width="1em" height="1em" viewBox="0 0 24 24">
                                     <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 6H6c-.932 0-1.398 0-1.766.152a2 2 0 0 0-1.082 1.083C3 7.602 3 8.068 3 9a3 3 0 1 1 0 6c0 .932 0 1.398.152 1.765a2 2 0 0 0 1.082 1.083C4.602 18 5.068 18 6 18h8m0-12h4c.932 0 1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C21 7.602 21 8.068 21 9a3 3 0 1 0 0 6c0 .932 0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C19.398 18 18.932 18 18 18h-4m0-12v12"></path>
                                 </svg>
-                                <span className="text-sm text-[#D9D9D9]">Referral Code</span>
+                                <span className="text-sm text-[#D9D9D9]">Referral address</span>
                             </div>
-                            <p className="text-sm text-white/50 font-medium">Amk5419</p>
+                            <p className="text-sm text-white/50 font-medium break-all">{address || "Not Available"}</p>
                         </div>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <button
+                        onClick={() => navigate("/invest")}
                         type="button"
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-colors"
                     >
@@ -126,6 +128,7 @@ export default function ProfilePage() {
                     </button>
                     <button
                         type="button"
+                        onClick={() => navigate("/claim")}
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-sky-500/15 text-sky-400 hover:bg-sky-500/25 transition-colors"
                     >
                         <svg
