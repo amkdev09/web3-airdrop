@@ -104,7 +104,7 @@ export const useAuth = () => {
   }, [clearAddress, setAddress]);
 
   const refferalLink = useCallback(() => {
-    return `${window.location.origin}/?ref=${encodeURIComponent(encryptData(address))}`;
+    return address ? `${window.location.origin}/?ref=${encodeURIComponent(encryptData(address))}` : null;
   }, [address]);
 
   return {

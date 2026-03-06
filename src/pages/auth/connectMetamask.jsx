@@ -1,14 +1,17 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useSnackbar from "../../hooks/useSnackbar";
 import metaMaskIcon from "../../assets/svg/metamask.svg";
+import userService from "../../services/userServices";
+import { MdOutlineArrowBackIosNew } from "react-icons/md";
 
 const META_MASK_DOWNLOAD_URL = "https://metamask.io/download/";
 
 export default function ConnectMetamask() {
     const navigate = useNavigate();
     const location = useLocation();
+
     const { address, isConnected, connectMetaMask } = useAuth();
     const { showSnackbar } = useSnackbar();
 
@@ -16,6 +19,7 @@ export default function ConnectMetamask() {
     const [error, setError] = useState(null);
 
     const from = location.state?.from?.pathname || "/";
+    const referralId = location.state?.referralId || null;
 
     const handleConnect = useCallback(async () => {
         setError(null);
@@ -23,6 +27,9 @@ export default function ConnectMetamask() {
         try {
             const result = await connectMetaMask();
             showSnackbar("Wallet connected successfully", "success");
+            if (referralId) {
+                await userService.registerReferral({ referralId });
+            }
             navigate(from, { replace: true });
         } catch (err) {
             const message =
@@ -53,6 +60,11 @@ export default function ConnectMetamask() {
     return (
         <main className="max-w-120 w-full mx-auto">
             <div className="w-full max-w-md mx-auto space-y-6 py-6 px-5">
+                <div className="flex justify-start">
+                    <button className="cursor-pointer" onClick={() => navigate(-1)}>
+                        <MdOutlineArrowBackIosNew className="text-2xl text-[#009C8A]" />
+                    </button>
+                </div>
                 <div className="text-center">
                     <h2 className="text-2xl font-bold text-white">
                         Connect Wallet

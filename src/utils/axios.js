@@ -11,8 +11,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const address = store.getState()?.userAuth?.address;
-    if (address) {
+    if (config.requiresAuth) {
+      const address = store.getState()?.userAuth?.address;
+      if (!address) {
+        return Promise.reject(new Error("Wallet not connected"));
+      }
       config.params = { ...config.params, address };
     }
     return config;

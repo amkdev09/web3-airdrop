@@ -1,6 +1,9 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import cryptoRoadmap from "../../assets/images/crypto-roadmap.webp";
 import selsilaBrandLogo from "../../assets/images/sslogo.png";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import useSnackbar from "../../hooks/useSnackbar";
+import { decryptData } from "../../utils/encryption";
 
 const CAROUSEL_CARDS = [
   {
@@ -33,9 +36,31 @@ const SWIPE_THRESHOLD = 50;
 const AUTO_SCROLL_MS = 5000;
 
 export default function Home() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const referralId = searchParams.get("ref") || "";
+  const decryptedReferralId = referralId && decryptData(referralId);
+
+  const { showSnackbar } = useSnackbar();
   const [carouselIndex, setCarouselIndex] = useState(1);
+
   const touchStartX = useRef(0);
   const autoScrollRef = useRef(null);
+
+
+  const handleReferralReg = useCallback(() => {
+    if (decryptedReferralId) {
+      navigate(`/connect-metamask`, { state: { from: location.pathname, referralId: decryptedReferralId } });
+    } else if (referralId && !decryptedReferralId) {
+      showSnackbar("Invalid referral ID", "error");
+    }
+  }, [referralId]);
+
+  useEffect(() => {
+    handleReferralReg();
+  }, [handleReferralReg]);
 
   const goPrev = useCallback(
     () => setCarouselIndex((i) => (i - 1 + CAROUSEL_CARDS.length) % CAROUSEL_CARDS.length),

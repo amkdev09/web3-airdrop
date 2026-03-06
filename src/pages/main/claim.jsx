@@ -37,7 +37,7 @@ export default function ClaimPage() {
         try {
             const fetchTx = selectedClaim === "income"
                 ? () => userServices.claimIncome()
-                : () => userServices.claimCapitalIncome(0);
+                : () => userServices.claimCapitalIncome();
             const txHash = await fetchAndBroadcast(fetchTx, address);
             showSnackbar("Transaction submitted. Hash: " + txHash.slice(0, 10) + "...", "success");
             queryClient.invalidateQueries({ queryKey: ["vaultSummary", address] });

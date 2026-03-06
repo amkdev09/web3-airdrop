@@ -121,7 +121,7 @@ export default function AirdropPage() {
             <div className="flex flex-col gap-y-2 space-y-3">
                 <p className="text-base max-w-xs mx-auto text-white text-center leading-5">The more you share, the more you earn <br /> start referring now!</p>
                 <div className="flex gap-2 bg-[#1A1A52B2] shadow-cyan-neon p-3 rounded-xl border border-selsila-purple undefined">
-                    <p className="text-base text-white truncate">{refferalLink || "Connect your wallet to get your referral link."}</p>
+                    <p className="text-base text-white truncate">{refferalLink || "Connect wallet to get referral link."}</p>
                     <div className="ml-auto flex items-center gap-2">
                         <button onClick={handleCopyReferralLink}>
                             {copied ? (

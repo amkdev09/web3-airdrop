@@ -1,19 +1,21 @@
 import api from "../utils/axios";
 
 const userServices = {
+    registerReferral: async (body) => {
+        const response = await api.post('/register', body);
+        return response.data;
+    },
     getVaultSummary: async () => {
-        const response = await api.get('/summary');
+        const response = await api.get('/summary', { requiresAuth: true });
         return response.data;
     },
-    claimIncome: async () => {
-        const response = await api.post('/withdraw-income');
+    claimIncome: async (body) => {
+        const response = await api.post('/withdraw-income', body);
         return response.data;
     },
-    /**
-     * @param {number} [cycleIndex=0] - Cycle index from /vault/cycles (0-based)
-     */
-    claimCapitalIncome: async (cycleIndex = 0) => {
-        const response = await api.post('/withdraw-capital', { cycleIndex });
+
+    claimCapitalIncome: async (body) => {
+        const response = await api.post('/withdraw-capital', body);
         return response.data;
     },
     invest: async (body) => {

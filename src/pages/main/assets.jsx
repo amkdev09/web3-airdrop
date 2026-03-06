@@ -53,7 +53,7 @@ export default function ProfilePage() {
                         <div className="relative size-16 sm:size-20 rounded-full overflow-hidden bg-white/5 mb-4">
                             <div className="absolute inset-0 flex items-center justify-center text-white/35">
                                 <svg
-                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns="http://www.w3.org/2000/svg"a
                                     aria-hidden="true"
                                     viewBox="0 0 24 24"
                                     fill="currentColor"
