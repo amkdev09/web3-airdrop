@@ -29,29 +29,21 @@ export const commonRouters = [
   {
     path: "/",
     isBottomNav: true,
-    label: "HOME",
-    icon: GoHome,
     component: asyncComponent(() => import("../pages/main/home.jsx")),
   },
   {
     path: "/team",
     isBottomNav: true,
-    label: "TEAM",
-    icon: LiaParachuteBoxSolid,
     component: asyncComponent(() => import("../pages/main/team.jsx")),
   },
   {
     path: "/reward",
     isBottomNav: true,
-    label: "REWARD",
-    icon: IoGiftOutline,
     component: asyncComponent(() => import("../pages/main/reward.jsx")),
   },
   {
     path: "/board",
     isBottomNav: true,
-    label: "BOARD",
-    icon: FaRankingStar,
     component: asyncComponent(() => import("../pages/main/board.jsx")),
   },
 ];
@@ -60,8 +52,6 @@ export const protectedRouters = [
   {
     path: "/assets",
     isBottomNav: true,
-    label: "ASSETS",
-    icon: CgProfile,
     component: asyncComponent(() => import("../pages/main/assets.jsx")),
   },
   {
@@ -71,6 +61,10 @@ export const protectedRouters = [
   {
     path: "/invest",
     component: asyncComponent(() => import("../pages/main/invest.jsx")),
+  },
+  {
+    path: "/transaction-history",
+    component: asyncComponent(() => import("../pages/main/transactionHistory.jsx")),
   },
 ];
 

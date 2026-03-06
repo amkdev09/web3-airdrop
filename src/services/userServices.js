@@ -22,6 +22,18 @@ const userServices = {
         const response = await api.post('/invest', body);
         return response.data;
     },
+    poolLiquidity: async () => {
+        const response = await api.get('/pool-liquidity');
+        return response.data;
+    },
+    poolPositiveValue: async () => {
+        const response = await api.get('/pool-position-value');
+        return response.data;
+    },
+    transactionHistory: async (fromBlock = 0, toBlock = 0, limit = 50) => {
+        const response = await api.get(`/transaction-history?fromBlock=&toBlock=&limit=${limit}`, { requiresAuth: true });
+        return response.data;
+    },
 }
 
 export default userServices;

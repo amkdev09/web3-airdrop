@@ -151,6 +151,7 @@ export default function ProfilePage() {
                     <button
                         type="button"
                         className="col-span-2 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-violet-500/15 text-violet-400 hover:bg-violet-500/25 transition-colors"
+                        onClick={() => navigate("/transaction-history")}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

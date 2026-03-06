@@ -4,6 +4,9 @@ import selsilaBrandLogo from "../../assets/images/sslogo.png";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import useSnackbar from "../../hooks/useSnackbar";
 import { decryptData } from "../../utils/encryption";
+import { useQuery } from "@tanstack/react-query";
+import userServices from "../../services/userServices";
+import { formatCompactNumber } from "../../utils/utils";
 
 const CAROUSEL_CARDS = [
   {
@@ -49,6 +52,11 @@ export default function Home() {
   const touchStartX = useRef(0);
   const autoScrollRef = useRef(null);
 
+  const { data, isLoading: isLoadingPoolLiquidity } = useQuery({
+    queryKey: ["poolLiquidity", "poolPositiveValue"],
+    queryFn: () => Promise.all([userServices.poolLiquidity(), userServices.poolPositiveValue()]),
+  });
+  const [poolLiquidity, poolPositiveValue] = data ?? [];
 
   const handleReferralReg = useCallback(() => {
     if (decryptedReferralId) {
@@ -144,13 +152,13 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-8 auto-rows-auto px-5 mt-5">
           <div className="flex flex-col gap-y-2">
             <div className="bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
-              <p className="text-2xl font-sans text-center">320.3K</p>
+              <p className="text-2xl font-sans text-center">{isLoadingPoolLiquidity ? '...' : poolLiquidity?.liquidity ? formatCompactNumber(poolLiquidity?.liquidity) : '0'}</p>
             </div>
             <p className="text-xs text-center">CRYPTO LIQUIDITY</p>
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
-              <p className="text-2xl font-sans text-center">2.9M</p>
+              <p className="text-2xl font-sans text-center">{isLoadingPoolLiquidity ? '...' : poolPositiveValue?.positionValue ? formatCompactNumber(poolPositiveValue?.liquidity) : '0'}</p>
             </div>
             <p className="text-xs text-center">OUR LIQUIDITY</p>
           </div>
