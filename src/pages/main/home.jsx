@@ -7,6 +7,7 @@ import { decryptData } from "../../utils/encryption";
 import { useQuery } from "@tanstack/react-query";
 import userServices from "../../services/userServices";
 import { formatCompactNumber } from "../../utils/utils";
+import InvestmentCalculator from "../../components/investmentCalculator/InvestmentCalculator";
 
 const CAROUSEL_CARDS = [
   {
@@ -231,6 +232,9 @@ export default function Home() {
                   <button onClick={() => navigate("/invest")} className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">
                     Start Investing
                   </button>
+                </div>
+                <div className="mt-5 -mx-5">
+                  <InvestmentCalculator />
                 </div>
                 <div className="bg-[#141439] rounded-3xl border border-selsila-purple transition-all duration-500 ease-in-out mt-0 max-h-0 opacity-0 transform -translate-y-4 overflow-hidden">
                   <div className="p-6 text-center">

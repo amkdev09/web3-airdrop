@@ -17,6 +17,13 @@ const userServices = {
         const response = await api.get('/cycles', { requiresAuth: true });
         return response.data;
     },
+    simulateInvestment: async ({ amount, useOneDayCycle }) => {
+        const response = await api.get('/simulate-investment', {
+            requiresAuth: true,
+            params: { amount: Number(amount), useOneDayCycle: Boolean(useOneDayCycle) },
+        });
+        return response.data;
+    },
     claimCapitalIncome: async (body) => {
         const response = await api.post('/withdraw-capital', body);
         return response.data;
