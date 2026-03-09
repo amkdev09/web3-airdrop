@@ -26,7 +26,7 @@ export default function ClaimPage() {
         enabled: !!address,
     });
     const [vaultSummary, cycles] = data ?? [];
-    const cycleIndex = cycles?.cycleNumber ?? 0;
+    const cycleIndex = cycles?.cycleCount ?? 0;
 
     const amountToClaim = selectedClaim === "income" ? vaultSummary?.availableIncome : vaultSummary?.invested || 0;
 
