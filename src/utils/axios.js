@@ -13,6 +13,11 @@ api.interceptors.request.use(
   (config) => {
     if (config.requiresAuth) {
       const address = store.getState()?.userAuth?.address;
+      const isRegistered = store.getState()?.userAuth?.isRegistered;
+      const isPost = config.method?.toLowerCase() === "post";
+      if (isPost && !isRegistered) {
+        return window.location.href = "/connect-metamask?reason=required-registration";
+      }
       if (!address) {
         return Promise.reject(new Error("Wallet not connected"));
       }

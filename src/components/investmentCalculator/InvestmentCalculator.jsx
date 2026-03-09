@@ -128,7 +128,7 @@ export default function InvestmentCalculator() {
             </div>
 
             <div className="space-y-2">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-lg bg-white/5 p-3 border border-white/5">
+                <div className="grid grid-cols-1 gap-3 rounded-lg bg-white/5 p-3 border border-white/5">
                     <div>
                         <p className="text-xs text-gray-500 uppercase tracking-wider">Daily ROI</p>
                         <p className="text-lg font-semibold text-[var(--color-selsila-green)] mt-1">

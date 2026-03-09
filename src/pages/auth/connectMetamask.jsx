@@ -1,10 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useSnackbar from "../../hooks/useSnackbar";
 import metaMaskIcon from "../../assets/svg/metamask.svg";
 import userService from "../../services/userServices";
+import { fetchAndBroadcast, ERROR_USER_REJECTED } from "../../lib/broadcastTransaction";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { setIsRegistered } from "../../store/slices/userAuthSlice";
 
 const META_MASK_DOWNLOAD_URL = "https://metamask.io/download/";
 const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
@@ -12,24 +15,28 @@ const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 export default function ConnectMetamask() {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const dispatch = useDispatch();
     const { address, isConnected, connectMetaMask } = useAuth();
     const { showSnackbar } = useSnackbar();
 
+    const [searchParams] = useSearchParams();
+    const from = location.state?.from?.pathname || "/";
+    const reason = location.state?.reason || searchParams.get("reason") || null;
+    const referralId = location.state?.referralId || null;
+
     const [isConnecting, setIsConnecting] = useState(false);
     const [error, setError] = useState(null);
-    const [needsRegistration, setNeedsRegistration] = useState(null);
+    const [needsRegistration, setNeedsRegistration] = useState(reason === "required-registration" ? true : null);
     const [sponsorAddress, setSponsorAddress] = useState("");
     const [isRegistering, setIsRegistering] = useState(false);
     const [registerError, setRegisterError] = useState(null);
 
-    const from = location.state?.from?.pathname || "/";
-    const referralId = location.state?.referralId || null;
 
     const checkSummaryAndNavigate = useCallback(async () => {
         try {
             const userSummary = await userService.getVaultSummary();
             if (userSummary?.registered) {
+                dispatch(setIsRegistered({ isRegistered: true }));
                 navigate(from, { replace: true });
                 showSnackbar("Wallet connected", "success");
             } else {
@@ -38,7 +45,7 @@ export default function ConnectMetamask() {
         } catch {
             setNeedsRegistration(true);
         }
-    }, [navigate, from, showSnackbar]);
+    }, [navigate, from, showSnackbar, dispatch]);
 
     const handleConnect = useCallback(async () => {
         setError(null);
@@ -81,20 +88,37 @@ export default function ConnectMetamask() {
             showSnackbar("Invalid wallet address format", "error");
             return;
         }
+        if (!address) {
+            showSnackbar("Connect your wallet first", "error");
+            return;
+        }
         setRegisterError(null);
         setIsRegistering(true);
         try {
-            await userService.registerReferral({ referrer: trimmed });
-            showSnackbar("Registration successful", "success");
+            const txHash = await fetchAndBroadcast(
+                () => userService.registerReferral({ referrer: trimmed }),
+                address
+            );
+            showSnackbar(
+                txHash
+                    ? `Registration submitted. Tx: ${txHash.slice(0, 10)}...`
+                    : "Registration successful",
+                "success"
+            );
+            dispatch(setIsRegistered({ isRegistered: true }));
             navigate(from, { replace: true });
         } catch (err) {
-            const message = err?.message || err?.error || "Registration failed";
+            const message =
+                err?.code === ERROR_USER_REJECTED
+                    ? "Transaction was rejected"
+                    : err?.message || err?.error || "Registration failed";
             setRegisterError(message);
             showSnackbar(message, "error");
+            dispatch(setIsRegistered({ isRegistered: false }));
         } finally {
             setIsRegistering(false);
         }
-    }, [sponsorAddress, navigate, from, showSnackbar]);
+    }, [sponsorAddress, address, navigate, from, showSnackbar]);
 
     const handleRetry = useCallback(() => {
         setError(null);
@@ -105,7 +129,7 @@ export default function ConnectMetamask() {
         <main className="max-w-120 w-full mx-auto">
             <div className="w-full max-w-md mx-auto space-y-6 py-6 px-5">
                 <div className="flex justify-start">
-                    <button className="cursor-pointer" onClick={() => navigate(-1)}>
+                    <button className="cursor-pointer" onClick={() => navigate(referralId ? `/` : -1)}>
                         <MdOutlineArrowBackIosNew className="text-2xl text-[#009C8A]" />
                     </button>
                 </div>
@@ -149,8 +173,17 @@ export default function ConnectMetamask() {
                             </button>
                         </div>
                     )}
+                    {reason === "required-registration" && (
+                        <div
+                            className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-300"
+                            role="alert"
+                        >
+                            <p className="font-medium">Registration required</p>
+                            <p className="mt-1 opacity-90">Please register your wallet to access the vault</p>
+                        </div>
+                    )}
                 </div>
-                {needsRegistration && (
+                {(needsRegistration && address) && (
                     <div className="rounded-lg border border-[var(--color-gray-600)] bg-gray-800/30 p-4 text-sm text-gray-400 space-y-3">
                         <p className="font-medium text-gray-300">Register your wallet</p>
                         <p className="text-gray-400">

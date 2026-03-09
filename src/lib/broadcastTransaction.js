@@ -23,10 +23,13 @@ export function normalizeTransaction(apiResponse) {
   if (!tx.to || typeof tx.data !== "string") {
     throw new Error("Invalid transaction: missing 'to' or 'data'");
   }
+  const rawValue = tx.value != null ? String(tx.value) : "0";
+  const value = rawValue.startsWith("0x") ? rawValue : `0x${BigInt(rawValue).toString(16)}`;
+
   const normalized = {
     to: String(tx.to).trim(),
     data: String(tx.data).trim(),
-    value: tx.value != null ? String(tx.value) : "0",
+    value,
     gasLimit: tx.gasLimit != null ? String(tx.gasLimit) : undefined,
     chainId: tx.chainId != null ? Number(tx.chainId) : undefined,
   };

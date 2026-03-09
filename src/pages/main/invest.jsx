@@ -128,8 +128,8 @@ export default function InvestPage() {
                         <p className="font-wavacorp text-lg tracking-[0.15em]">UltraDefi</p>
                     </div>
                     <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
-                        <p className="text-sm text-gray-400 capitalize">Invested</p>
-                        <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : vaultSummary?.invested ? `$${vaultSummary?.invested}` : "$0"}</p>
+                        <p className="text-sm text-gray-400 capitalize">{selectedInvest === "invest" ? "Invested" : "Available Income"}</p>
+                        <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : selectedInvest === "invest" ? vaultSummary?.invested ? `$${vaultSummary?.invested}` : "$0" : vaultSummary?.availableIncome ? `$${vaultSummary?.availableIncome}` : "$0"}</p>
                     </div>
                     <div className="mt-auto flex justify-end text-sm">
                         <button className="flex items-center gap-1 text-[#D9D9D9] text-sm cursor-pointer" id="headlessui-menu-button-«r2»" type="button" aria-haspopup="menu" aria-expanded="false" data-headlessui-state="">

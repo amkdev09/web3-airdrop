@@ -152,7 +152,7 @@ export default function RewardPage() {
                 </div>
             </div>
 
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="mt-8 grid grid-cols-1 gap-4">
                 <div className="rounded-xl border border-cyan-400/20 bg-gradient-to-br from-slate-900/90 to-slate-800/50 backdrop-blur-md p-5">
                     <p className="text-xs text-cyan-400/80 uppercase tracking-wider">Pending ROI</p>
                     <p className="text-xl sm:text-2xl font-semibold text-white mt-2">
@@ -209,7 +209,7 @@ export default function RewardPage() {
                     </div>
                 </div>
             </div>
-            <div className="mt-12">
+            {/* <div className="mt-12">
                 <div className="w-full">
                     <p className="text-sm sm:text-base text-white mb-5 text-center">Gift for complete 10 referrals</p>
                     <div className="overflow-hidden">
@@ -299,7 +299,7 @@ export default function RewardPage() {
                     </div>
                     <div className="flex justify-center mt-8 space-x-2"><button className="size-[10px] rounded-full transition-all duration-300 bg-cyan-400 shadow-lg shadow-cyan-400/50"></button><button className="size-[10px] rounded-full transition-all duration-300 bg-gray-600 hover:bg-gray-500"></button><button className="size-[10px] rounded-full transition-all duration-300 bg-gray-600 hover:bg-gray-500"></button><button className="size-[10px] rounded-full transition-all duration-300 bg-gray-600 hover:bg-gray-500"></button><button className="size-[10px] rounded-full transition-all duration-300 bg-gray-600 hover:bg-gray-500"></button><button className="size-[10px] rounded-full transition-all duration-300 bg-gray-600 hover:bg-gray-500"></button><button className="size-[10px] rounded-full transition-all duration-300 bg-gray-600 hover:bg-gray-500"></button></div>
                 </div>
-            </div>
+            </div> */}
             <div className="mt-12">
                 <div className="space-y-4">
                     <p className="text-sm sm:text-base text-white">Recent Activity :</p>

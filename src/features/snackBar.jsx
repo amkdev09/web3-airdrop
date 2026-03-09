@@ -2,7 +2,8 @@ import React, { createContext, useState, useCallback } from "react";
 import { Snackbar, Alert } from "@mui/material";
 import { FONT_SIZE } from "../constant/lookUpConstant";
 
-const SnackbarContext = createContext();
+const defaultSnackbarContext = { showSnackbar: () => {} };
+const SnackbarContext = createContext(defaultSnackbarContext);
 
 export const SnackbarProvider = ({ children }) => {
   const [snack, setSnack] = useState({

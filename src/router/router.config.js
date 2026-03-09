@@ -1,27 +1,6 @@
 import asyncComponent from "../utils/asyncComponent.jsx";
-import { GoHome } from "react-icons/go";
-import { LiaParachuteBoxSolid } from "react-icons/lia";
-import { IoGiftOutline } from "react-icons/io5";
-import { FaRankingStar } from "react-icons/fa6";
-import { CgProfile } from "react-icons/cg";
 
 export const commonRouters = [
-  {
-    path: "/login",
-    component: asyncComponent(() => import("../pages/auth/Login.jsx")),
-  },
-  {
-    path: "/signup",
-    component: asyncComponent(() => import("../pages/auth/Signup.jsx")),
-  },
-  {
-    path: "/forgot-password",
-    component: asyncComponent(() => import("../pages/auth/ForgotPassword.jsx")),
-  },
-  {
-    path: "/verify-otp",
-    component: asyncComponent(() => import("../pages/auth/verifyOtp.jsx")),
-  },
   {
     path: "/connect-metamask",
     component: asyncComponent(() => import("../pages/auth/connectMetamask.jsx")),
@@ -68,5 +47,4 @@ export const protectedRouters = [
   },
 ];
 
-export const authRouters = commonRouters;
 export const routers = [...commonRouters, ...protectedRouters];
