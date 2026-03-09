@@ -58,6 +58,19 @@ export default function Home() {
   });
   const [poolLiquidity, poolPositiveValue] = data ?? [];
 
+  const { data: bnbPriceData } = useQuery({
+    queryKey: ["bnbPrice"],
+    queryFn: async () => {
+      const res = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
+      if (!res.ok) throw new Error("Failed to fetch BNB price");
+      const json = await res.json();
+      return Number(json.price);
+    },
+    refetchInterval: 60_000,
+    staleTime: 60_000,
+  });
+  const bnbPriceUsd = bnbPriceData ?? 0;
+
   const handleReferralReg = useCallback(() => {
     if (decryptedReferralId) {
       navigate(`/connect-metamask`, { state: { from: location.pathname, referralId: decryptedReferralId } });
@@ -152,13 +165,13 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-8 auto-rows-auto px-5 mt-5">
           <div className="flex flex-col gap-y-2">
             <div className="bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
-              <p className="text-2xl font-sans text-center">{isLoadingPoolLiquidity ? '...' : poolLiquidity?.liquidity ? formatCompactNumber(poolLiquidity?.liquidity) : '0'}</p>
+              <p className="text-2xl font-sans text-center">{isLoadingPoolLiquidity ? '...' : poolLiquidity?.usdtInLP ? formatCompactNumber(poolLiquidity?.usdtInLP) : '0'}</p>
             </div>
             <p className="text-xs text-center">CRYPTO LIQUIDITY</p>
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="bg-linear-(--hologram-gradient) shadow-cyan-neon py-1.5 rounded-xl border border-selsila-purple">
-              <p className="text-2xl font-sans text-center">{isLoadingPoolLiquidity ? '...' : poolPositiveValue?.positionValue ? formatCompactNumber(poolPositiveValue?.liquidity) : '0'}</p>
+              <p className="text-2xl font-sans text-center">{isLoadingPoolLiquidity ? '...' : poolPositiveValue ? formatCompactNumber((Number(poolPositiveValue?.usdtBalance) || 0) + (Number(poolPositiveValue?.wbnbBalance) || 0) * bnbPriceUsd) : '0'}</p>
             </div>
             <p className="text-xs text-center">OUR LIQUIDITY</p>
           </div>
@@ -211,13 +224,17 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-12 space-y-4 px-5 overflow-x-hidden">
-            <p className="text-base text-shadow-purple-green">Want to know more about SELSILA?</p>
+            <p className="text-base text-shadow-purple-green">Want to know more about UltraDefi?</p>
             <div className="space-y-6">
               <div className="max-w-2xl mx-auto relative">
-                <div className="px-5"><button className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">Start Investing</button></div>
+                <div className="px-5">
+                  <button onClick={() => navigate("/invest")} className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">
+                    Start Investing
+                  </button>
+                </div>
                 <div className="bg-[#141439] rounded-3xl border border-selsila-purple transition-all duration-500 ease-in-out mt-0 max-h-0 opacity-0 transform -translate-y-4 overflow-hidden">
                   <div className="p-6 text-center">
-                    <div className="mt-5"><a className="text-center text-sm hover:underline" target="_blank" href="https://selsiworld.com/">https://selsiworld.com/</a></div>
+                    <div className="mt-5"><a className="text-center text-sm hover:underline" target="_blank" href="https://ultradefi.com/">https://ultradefi.com/</a></div>
                   </div>
                 </div>
               </div>
@@ -244,7 +261,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-12 text-center text-white px-5">
-            <h2 className="text-lg text-white">Join the Future of Web3 Gaming with SELSILA WORLD!</h2>
+            <h2 className="text-lg text-white">Join the Future of Web3 Gaming with UltraDefi WORLD!</h2>
             <p className="text-sm mt-5">Partner with Selsila and be part of the world’s first fully immersive Web3 gaming revolution. Leverage cutting-edge blockchain technology, AI-driven ecosystems, and limitless opportunities in decentralized gaming.</p>
             <p className="text-lg mt-5">Let’s build the future together.</p>
             <div className="mt-6 relative w-24 h-14 mx-auto">

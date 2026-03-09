@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
 // =============================================================================
-// SELSILA AIRDROP – Design tokens (pixel-perfect match to reference)
+// UltraDefi AIRDROP – Design tokens (pixel-perfect match to reference)
 // =============================================================================
 
 // Responsive breakpoints
@@ -65,7 +65,7 @@ const fontSizes = {
   md: "0.9375rem",   // 15px – body, button text
   lg: "1.125rem",    // 18px – stats numbers
   xl: "1.25rem",     // 20px – section headings (ROADMAP, Selsi Future X Plan)
-  xxl: "1.5rem",     // 24px – main title "SELSILA AIRDROP"
+  xxl: "1.5rem",     // 24px – main title "UltraDefi AIRDROP"
   hero: "1.75rem",   // 28px – "Join the Future..." heading
 };
 

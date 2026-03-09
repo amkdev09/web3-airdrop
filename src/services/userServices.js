@@ -2,7 +2,7 @@ import api from "../utils/axios";
 
 const userServices = {
     registerReferral: async (body) => {
-        const response = await api.post('/register', body);
+        const response = await api.post('/register', body, { requiresAuth: true });
         return response.data;
     },
     getVaultSummary: async () => {

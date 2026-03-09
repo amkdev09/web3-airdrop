@@ -7,6 +7,7 @@ import userService from "../../services/userServices";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 
 const META_MASK_DOWNLOAD_URL = "https://metamask.io/download/";
+const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 
 export default function ConnectMetamask() {
     const navigate = useNavigate();
@@ -17,20 +18,35 @@ export default function ConnectMetamask() {
 
     const [isConnecting, setIsConnecting] = useState(false);
     const [error, setError] = useState(null);
+    const [needsRegistration, setNeedsRegistration] = useState(null);
+    const [sponsorAddress, setSponsorAddress] = useState("");
+    const [isRegistering, setIsRegistering] = useState(false);
+    const [registerError, setRegisterError] = useState(null);
 
     const from = location.state?.from?.pathname || "/";
     const referralId = location.state?.referralId || null;
+
+    const checkSummaryAndNavigate = useCallback(async () => {
+        try {
+            const userSummary = await userService.getVaultSummary();
+            if (userSummary?.registered) {
+                navigate(from, { replace: true });
+                showSnackbar("Wallet connected", "success");
+            } else {
+                setNeedsRegistration(true);
+            }
+        } catch {
+            setNeedsRegistration(true);
+        }
+    }, [navigate, from, showSnackbar]);
 
     const handleConnect = useCallback(async () => {
         setError(null);
         setIsConnecting(true);
         try {
-            const result = await connectMetaMask();
+            await connectMetaMask();
             showSnackbar("Wallet connected successfully", "success");
-            if (referralId) {
-                await userService.registerReferral({ referralId });
-            }
-            navigate(from, { replace: true });
+            await checkSummaryAndNavigate();
         } catch (err) {
             const message =
                 err.message === "Connection rejected by user"
@@ -43,14 +59,42 @@ export default function ConnectMetamask() {
         } finally {
             setIsConnecting(false);
         }
-    }, [connectMetaMask, showSnackbar, navigate, from]);
+    }, [connectMetaMask, showSnackbar, checkSummaryAndNavigate]);
 
     useEffect(() => {
-        if (isConnected && address) {
-            navigate(from, { replace: true });
-            showSnackbar("wallet already connected", "success");
+        if (referralId) setSponsorAddress(referralId);
+    }, [referralId]);
+
+    useEffect(() => {
+        if (isConnected && needsRegistration === null) {
+            checkSummaryAndNavigate();
         }
-    }, [isConnected, address, navigate, from, showSnackbar]);
+    }, [isConnected, needsRegistration, checkSummaryAndNavigate]);
+
+    const handleRegister = useCallback(async () => {
+        const trimmed = sponsorAddress?.trim();
+        if (!trimmed) {
+            showSnackbar("Please enter sponsor address", "error");
+            return;
+        }
+        if (!ETH_ADDRESS_REGEX.test(trimmed)) {
+            showSnackbar("Invalid wallet address format", "error");
+            return;
+        }
+        setRegisterError(null);
+        setIsRegistering(true);
+        try {
+            await userService.registerReferral({ referralId: trimmed });
+            showSnackbar("Registration successful", "success");
+            navigate(from, { replace: true });
+        } catch (err) {
+            const message = err?.message || err?.error || "Registration failed";
+            setRegisterError(message);
+            showSnackbar(message, "error");
+        } finally {
+            setIsRegistering(false);
+        }
+    }, [sponsorAddress, navigate, from, showSnackbar]);
 
     const handleRetry = useCallback(() => {
         setError(null);
@@ -106,6 +150,38 @@ export default function ConnectMetamask() {
                         </div>
                     )}
                 </div>
+                {needsRegistration && (
+                    <div className="rounded-lg border border-[var(--color-gray-600)] bg-gray-800/30 p-4 text-sm text-gray-400 space-y-3">
+                        <p className="font-medium text-gray-300">Register your wallet</p>
+                        <p className="text-gray-400">
+                            Enter your sponsor address to complete registration. If you joined via referral link, it is pre-filled.
+                        </p>
+                        <div>
+                            <label htmlFor="sponsor-address" className="block text-gray-400 text-xs mb-1">
+                                Sponsor address
+                            </label>
+                            <input
+                                id="sponsor-address"
+                                type="text"
+                                value={sponsorAddress}
+                                onChange={(e) => setSponsorAddress(e.target.value)}
+                                placeholder="0x..."
+                                className="w-full px-3 py-2.5 rounded-lg bg-gray-900/80 border border-[var(--color-gray-600)] text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-selsila-green)] focus:border-transparent"
+                            />
+                        </div>
+                        {registerError && (
+                            <p className="text-red-400 text-xs">{registerError}</p>
+                        )}
+                        <button
+                            type="button"
+                            onClick={handleRegister}
+                            disabled={isRegistering}
+                            className="w-full py-3 px-4 bg-[var(--color-selsila-green)] text-white font-semibold rounded-lg hover:bg-[var(--color-selsila-green)]/90 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            {isRegistering ? "Registering…" : "Register"}
+                        </button>
+                    </div>
+                )}
                 <div className="rounded-lg border border-[var(--color-gray-600)] bg-gray-800/30 p-4 text-sm text-gray-400">
                     <p className="font-medium text-gray-300 mb-1">New to MetaMask?</p>
                     <p className="mb-3">
