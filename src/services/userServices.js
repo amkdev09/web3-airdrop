@@ -52,6 +52,18 @@ const userServices = {
         const response = await api.get(`/transaction-history?fromBlock=&toBlock=&limit=${limit}`, { requiresAuth: true });
         return response.data;
     },
+    getRoi: async () => {
+        const response = await api.get('/roi', { requiresAuth: true });
+        return response.data;
+    },
+    getGlobalPool: async () => {
+        const response = await api.get('/global-pool');
+        return response.data;
+    },
+    claimGlobalRank6: async () => {
+        const response = await api.post('/claim-global-rank6', {}, { requiresAuth: true });
+        return response.data;
+    },
 }
 
 export default userServices;

@@ -179,7 +179,6 @@ export default function ProfilePage() {
                 </button>
                 <p className="text-center text-sm text-[#D9D9D9] mt-6">Need help? Contact us on <a href="https://t.me/SelsilaOfficial" target="_blank" rel="noopener noreferrer" className="text-selsila-purple hover:underline">Telegram</a></p>
             </div>
-
             <ConfirmationModal
                 open={logoutModalOpen}
                 onClose={() => !logoutLoading && setLogoutModalOpen(false)}

@@ -14,6 +14,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 function NumberSpinner({
   id: idProp,
   label,
+  placeholder,
   error = false,
   errorMessage,
   success = false,
@@ -29,7 +30,9 @@ function NumberSpinner({
   ...other
 }) {
   const id = React.useId();
-  const [value, setValue] = React.useState(defaultValue || min || 0);
+  const [value, setValue] = React.useState(
+    defaultValue === "" ? "" : (defaultValue ?? min ?? 0)
+  );
   const [focused, setFocused] = React.useState(false);
 
   // Update internal value when defaultValue changes (e.g. currency switch), but not while user is typing
@@ -188,9 +191,10 @@ function NumberSpinner({
           disabled={disabled}
           required={required}
           placeholder={
-            min !== undefined && max !== undefined
+            placeholder ??
+            (min !== undefined && max !== undefined
               ? `${min}-${max} USDT`
-              : label
+              : label)
           }
           inputProps={{
             ...other,

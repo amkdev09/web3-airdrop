@@ -1,7 +1,70 @@
-import React from "react";
-import iphone from "../../assets/images/iphone16.webp"
+import React, { useCallback, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import iphone from "../../assets/images/iphone16.webp";
+import userServices from "../../services/userServices";
+import { fetchAndBroadcast, ERROR_USER_REJECTED } from "../../lib/broadcastTransaction";
+import useSnackbar from "../../hooks/useSnackbar";
+import useAuth from "../../hooks/useAuth";
+import { copyToClipboard } from "../../utils/utils";
+
+function formatCurrency(value) {
+    if (value == null || Number.isNaN(Number(value))) return "$0";
+    const num = Number(value);
+    if (num >= 1_000_000) return `$${(num / 1_000_000).toFixed(2)}M`;
+    if (num >= 1_000) return `$${(num / 1_000).toFixed(2)}K`;
+    return `$${num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 
 export default function RewardPage() {
+    const address = useSelector((state) => state.userAuth?.address);
+    const { refferalLink } = useAuth();
+    const { showSnackbar } = useSnackbar();
+    const queryClient = useQueryClient();
+    const [claimRank6Loading, setClaimRank6Loading] = useState(false);
+
+    const { data: roiData, isLoading: isRoiLoading } = useQuery({
+        queryKey: ["roi", address],
+        queryFn: () => userServices.getRoi(),
+        enabled: !!address,
+    });
+    const pendingRoi = roiData?.pendingRoi ?? roiData?.roi ?? roiData?.amount ?? 0;
+
+    const { data: globalPoolData, isLoading: isGlobalPoolLoading } = useQuery({
+        queryKey: ["globalPool"],
+        queryFn: () => userServices.getGlobalPool(),
+    });
+    const globalRank6Pool = globalPoolData?.globalRank6Pool ?? 0;
+    const totalRank6Users = globalPoolData?.totalRank6Users ?? 0;
+
+    const handleClaimRank6 = useCallback(async () => {
+        if (!address) {
+            showSnackbar("Connect your wallet first.", "error");
+            return;
+        }
+        setClaimRank6Loading(true);
+        try {
+            const fetchTx = () => userServices.claimGlobalRank6();
+            const txHash = await fetchAndBroadcast(fetchTx, address);
+            showSnackbar("Rank 6 claim submitted. Hash: " + txHash.slice(0, 10) + "...", "success");
+            queryClient.invalidateQueries({ queryKey: ["roi", address] });
+            queryClient.invalidateQueries({ queryKey: ["globalPool"] });
+        } catch (err) {
+            const message = err?.code === ERROR_USER_REJECTED
+                ? "Transaction was rejected."
+                : err?.message ?? "Claim failed. Please try again.";
+            showSnackbar(message, "error");
+        } finally {
+            setClaimRank6Loading(false);
+        }
+    }, [address, showSnackbar, queryClient]);
+
+    const handleCopyReferral = useCallback(async () => {
+        if (refferalLink) {
+            await copyToClipboard(refferalLink);
+            showSnackbar("Referral link copied.", "success");
+        }
+    }, [refferalLink, showSnackbar]);
 
     return (
         <main className="max-w-120 w-full mx-auto pt-12 px-4">
@@ -88,13 +151,48 @@ export default function RewardPage() {
                     </div>
                 </div>
             </div>
+
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="rounded-xl border border-cyan-400/20 bg-gradient-to-br from-slate-900/90 to-slate-800/50 backdrop-blur-md p-5">
+                    <p className="text-xs text-cyan-400/80 uppercase tracking-wider">Pending ROI</p>
+                    <p className="text-xl sm:text-2xl font-semibold text-white mt-2">
+                        {!address ? "—" : isRoiLoading ? "…" : formatCurrency(pendingRoi)}
+                    </p>
+                    {!address && <p className="text-xs text-gray-500 mt-1">Connect wallet</p>}
+                </div>
+                <div className="rounded-xl border border-cyan-400/20 bg-gradient-to-br from-slate-900/90 to-slate-800/50 backdrop-blur-md p-5">
+                    <p className="text-xs text-cyan-400/80 uppercase tracking-wider">Rank 6 Pool</p>
+                    <p className="text-xl sm:text-2xl font-semibold text-white mt-2">
+                        {isGlobalPoolLoading ? "…" : formatCurrency(globalRank6Pool)}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">{Number(totalRank6Users) || 0} users</p>
+                </div>
+                <div className="rounded-xl border border-cyan-400/20 bg-gradient-to-br from-slate-900/90 to-slate-800/50 backdrop-blur-md p-5 flex flex-col justify-between">
+                    <p className="text-xs text-cyan-400/80 uppercase tracking-wider">Claim Rank 6</p>
+                    <button
+                        type="button"
+                        onClick={handleClaimRank6}
+                        disabled={!address || claimRank6Loading}
+                        className="mt-3 w-full py-2.5 px-4 rounded-lg bg-gradient-to-r from-cyan-400/30 to-emerald-400/30 border border-cyan-400/40 text-white font-medium text-sm hover:from-cyan-400/40 hover:to-emerald-400/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    >
+                        {claimRank6Loading ? "Confirm in wallet…" : "Claim Pool Share"}
+                    </button>
+                </div>
+            </div>
+
             <div className="mt-8">
                 <div className="flex flex-col gap-y-2 space-y-3">
                     <p className="text-base max-w-xs mx-auto text-white text-center leading-5">The more you share, the more you earn <br /> start referring now!</p>
-                    <div className="flex gap-2 bg-[#1A1A52B2] shadow-cyan-neon p-3 rounded-xl border border-selsila-purple undefined">
-                        <p className="text-base text-white truncate">https://selsi.io/?ref=Amk5419</p>
-                        <div className="ml-auto flex items-center gap-2">
-                            <button>
+                    <div className="flex gap-2 bg-[#1A1A52B2] shadow-cyan-neon p-3 rounded-xl border border-selsila-purple">
+                        <p className="text-base text-white truncate flex-1 min-w-0">{refferalLink || "Connect wallet to get referral link"}</p>
+                        <div className="ml-auto flex items-center gap-2 shrink-0">
+                            <button
+                                type="button"
+                                onClick={handleCopyReferral}
+                                disabled={!refferalLink}
+                                className="p-1 rounded hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                aria-label="Copy referral link"
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--solar size-5 text-white" width="1em" height="1em" viewBox="0 0 24 24">
                                     <g fill="none" stroke="currentColor" strokeWidth="1.5">
                                         <path d="M6 11c0-2.828 0-4.243.879-5.121C7.757 5 9.172 5 12 5h3c2.828 0 4.243 0 5.121.879C21 6.757 21 8.172 21 11v5c0 2.828 0 4.243-.879 5.121C19.243 22 17.828 22 15 22h-3c-2.828 0-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z"></path>
