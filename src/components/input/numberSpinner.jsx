@@ -7,13 +7,10 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 function NumberSpinner({
-  id: idProp,
   label,
   placeholder,
   error = false,
-  errorMessage,
   success = false,
-  successMessage,
   size = 'medium',
   min,
   max,

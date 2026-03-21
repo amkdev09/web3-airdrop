@@ -11,7 +11,11 @@ export default function AirdropPage() {
     const { address, refferalLink } = useAuth();
     const navigate = useNavigate();
     const [copied, setCopied] = useState(false);
-
+    const [selectedTeam, setSelectedTeam] = useState("personal");
+    
+    const handleSelectTeam = (team) => {
+        setSelectedTeam(team);
+    };
     const handleCopyReferralLink = async () => {
         await copyToClipboard(refferalLink, setCopied);
     };
@@ -34,7 +38,6 @@ export default function AirdropPage() {
             </div>
             <div className="space-y-3 -mt-3">
                 <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Team</h1>
-                <p className="text-center text-sm uppercase tracking-[0.3em]">LISTING PRICE = USD 3</p>
             </div>
             <div className="mt-5">
                 <div>
@@ -42,16 +45,18 @@ export default function AirdropPage() {
                         <div className="relative w-full h-full">
                             <img loading="lazy" className="object-cover" src={abstractDistant} />
                         </div>
-                        <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
-                            <div className="flex items-center justify-between mb-4">
+                        <div className="absolute inset-0 p-4 flex justify-between">
+                            <div className="flex items-start flex-col">
                                 <p className="text-base text-[#D9D9D9]">Rank: {isLoading ? "Loading..." : vaultSummary?.rank ?? "0"}</p>
-                                <p className="font-wavacorp text-lg tracking-[0.15em]">UltraDefi</p>
+                                <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
+                                    <p className="text-sm text-gray-400">Total Earning</p>
+                                    <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : vaultSummary?.availableIncome ? `$${vaultSummary?.availableIncome}` : "$0"}</p>
+                                </div>
                             </div>
-                            <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
-                                <p className="text-sm text-gray-400">Total Earning</p>
-                                <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : vaultSummary?.availableIncome ? `$${vaultSummary?.availableIncome}` : "$0"}</p>
+                            <div className="mb-5">
+                                <p className="font-wavacorp text-base tracking-[0.15em]">UltraDefi</p>
                             </div>
-                            <div className="mt-auto flex justify-end text-sm">
+                            {/* <div className="absolute bottom-6 right-6 mt-auto flex justify-end text-sm">
                                 <button className="flex items-center gap-1 text-[#D9D9D9] text-sm cursor-pointer" id="headlessui-menu-button-«r2»" type="button" aria-haspopup="menu" aria-expanded="false" data-headlessui-state="">
                                     Currency
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--line-md" width="1em" height="1em" viewBox="0 0 24 24">
@@ -60,7 +65,7 @@ export default function AirdropPage() {
                                         </path>
                                     </svg>
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-8 auto-rows-auto mt-8">
@@ -85,7 +90,13 @@ export default function AirdropPage() {
                         <p className="text-sm break-all">{address || "Wallet address not set."}</p>
                     </div>
                     <div>
-                        <p className="text-base text-white">Personal</p>
+                        <div className="team-radio-group my-5">
+                            <input type="radio" name="teamPlan" id="team-glass-personal" checked={selectedTeam === "personal"} onChange={() => handleSelectTeam("personal")} />
+                            <label htmlFor="team-glass-personal">Personal</label>
+                            <input type="radio" name="teamPlan" id="team-glass-team" checked={selectedTeam === "team"} onChange={() => handleSelectTeam("team")} />
+                            <label htmlFor="team-glass-team">Team</label>
+                            <div className="glass-glider"></div>
+                        </div>
                         <div className="grid grid-cols-3 gap-x-2">
                             <button onClick={() => navigate("/claim")} className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Claim</button>
                             <button disabled="" className="flex gap-2.5 justify-center items-center bg-gradient-to-b from-[rgba(190,135,255,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">Amount</button>

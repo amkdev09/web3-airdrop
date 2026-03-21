@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import cryptoRoadmap from "../../assets/images/crypto-roadmap.webp";
+import cryptoRoadmap from "../../assets/images/crypto-roadmap.png";
 import selsilaBrandLogo from "../../assets/images/sslogo.png";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import useSnackbar from "../../hooks/useSnackbar";
 import { decryptData } from "../../utils/encryption";
 import { useQuery } from "@tanstack/react-query";
@@ -12,27 +12,28 @@ import InvestmentCalculator from "../../components/investmentCalculator/Investme
 const CAROUSEL_CARDS = [
   {
     id: "fairlaunch",
-    text: "Fairlaunch is Launch freely, fairly, and efficiently with Selsila's low-cost, user-first token creation protocol.",
+    title: "100% Smart Contract",
+    text: "All transactions and operations are automatically executed by smart contracts, constrained by predefined rules and conditions. Once these conditions are met, the contract automatically performs the corresponding actions.",
   },
   {
     id: "global",
-    text: "Global Expand is Selsila is actively preparing for its upcoming listing on a centralized exchange (CEX), marking a major step forward in its growth journey",
+    title: "Full Automation",
+    text: "BitNest does not store your assets; all assets are fully stored on the blockchain, with assets automatically moving between participants and contracts.",
   },
   {
     id: "wallet",
-    text: "Wallet is a digital wallet that lets users store, send, and receive crypto while interacting with decentralized apps (dApps).",
+    title: "Decentralization",
+    text: "No one, not even the creators of the code, can modify the operation of any BitNest smart contracts.",
   },
   {
     id: "dex",
-    text: "UltraDefi Dex Finance is Trade smarter, faster, and easier with SelsiDEX's spot, perp, and copy trading at your fingertips.",
+    title: "Transparency",
+    text: "Smart contracts run on the blockchain, and transaction records are stored on the blockchain, allowing anyone to view them at any time. This ensures fair conditions and reliable statistics that you can trust.",
   },
   {
     id: "logo",
-    text: "Selsila is a blockchain-based platform that allows users to create and trade digital assets.",
-  },
-  {
-    id: "logo",
-    text: "Selsila is a blockchain-based platform that allows users to create and trade digital assets.",
+    title: "Immutability",
+    text: "The algorithm is stored on the blockchain, so no one, not even the creators of BitNest, can intervene, cancel, or alter your transactions.",
   },
 ];
 
@@ -78,7 +79,7 @@ export default function Home() {
     } else if (referralId && !decryptedReferralId) {
       showSnackbar("Invalid referral ID", "error");
     }
-  }, [referralId]);
+  }, [decryptedReferralId, referralId, location.pathname, navigate, showSnackbar]);
 
   useEffect(() => {
     handleReferralReg();
@@ -132,8 +133,8 @@ export default function Home() {
       <div className="text-center flex flex-col gap-3">
         <h1 className="font-wavacorp text-base tracking-[0.45em]">UltraDefi</h1>
       </div>
-      <div className="px-5 relative mt-8">
-        <div className="flex items-center justify-between mb-4">
+      <div className="relative mt-4">
+        {/* <div className="flex items-center justify-between mb-4">
           <div className=" flex flex-col gap-y-0.5 items-center">
             <p className="text-xs font-wavacorp">01</p>
             <p className="font-sans text-sm">Airdrop Release</p>
@@ -142,11 +143,11 @@ export default function Home() {
             <p className="text-xs font-wavacorp">02</p>
             <p className="font-sans text-sm">UltraDefi Launchpad Launching</p>
           </div>
-        </div>
+        </div> */}
         <div className="relative size-full aspect-video z-10">
           <img alt="crypto-roadmap" decoding="async" data-nimg="fill" className="object-cover" sizes="100vw" src={cryptoRoadmap} style={{ position: 'absolute', height: '100%', width: '100%', inset: 0, color: 'transparent' }} />
         </div>
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="flex flex-col gap-y-0.5 items-center z-20">
             <p className="text-xs font-wavacorp">03</p>
             <p className="font-sans text-sm">UltraDefi Wallet Launching</p>
@@ -155,9 +156,9 @@ export default function Home() {
             <p className="text-xs font-wavacorp">04</p>
             <p className="font-sans text-sm">UltraDefi App Launching <br /> &amp; UltraDefi Public Listing</p>
           </div>
-        </div>
+        </div> */}
       </div>
-      <div className="my-10">
+      <div className="my-0">
         <div className="flex items-center justify-center w-full">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#be87ff66] to-transparent max-w-[200px]"></div>
           <h2 className="mx-6 tracking-[0.7em] font-wavacorp text-lg text-shadow-[0_2px_8px_var(--color-selsila-purple),0_2px_8px_var(--color-selsila-green)]" style={{ color: 'rgba(160, 200, 255, 0.85)' }}>ROADMAP</h2>
@@ -181,7 +182,7 @@ export default function Home() {
           <p className="text-base text-shadow-purple-green">UltraDefi Future X Plan</p>
           <div className="relative w-full">
             <div
-              className="relative h-64 flex items-center justify-center perspective-[1000px] select-none overflow-visible touch-pan-y"
+              className="relative h-68 flex items-center justify-center perspective-[1000px] select-none overflow-visible touch-pan-y"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
@@ -204,7 +205,7 @@ export default function Home() {
                 return (
                   <div
                     key={`${card.id}-${index}`}
-                    className="absolute w-52 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-4"
+                    className="absolute w-58 h-full cursor-pointer transition-all duration-700 ease-out preserve-3d bg-linear-(--hologram-gradient) shadow-cyan-neon rounded-[40px] border-2 border-selsila-purple flex flex-col items-center justify-center text-center p-3"
                     style={style}
                     onClick={() => (isLeftSide ? goPrev() : isRightSide ? goNext() : null)}
                     role="button"
@@ -217,7 +218,10 @@ export default function Home() {
                         <img alt="selsila" loading="lazy" decoding="async" className="object-contain w-full h-full" src={selsilaBrandLogo} />
                       </div>
                     ) : (
-                      <p className="text-sm text-white">{card.text}</p>
+                      <div className="flex flex-col gap-y-2 text-center">
+                        <p className="text-base text-white font-bold">{card.title}</p>
+                        <p className="text-sm text-white">{card.text}</p>
+                      </div>
                     )}
                   </div>
                 );
@@ -268,9 +272,6 @@ export default function Home() {
             <h2 className="text-lg text-white">Join the Future of Web3 Gaming with UltraDefi WORLD!</h2>
             <p className="text-sm mt-5">Partner with Selsila and be part of the world’s first fully immersive Web3 gaming revolution. Leverage cutting-edge blockchain technology, AI-driven ecosystems, and limitless opportunities in decentralized gaming.</p>
             <p className="text-lg mt-5">Let’s build the future together.</p>
-            <div className="mt-6 relative w-24 h-14 mx-auto">
-              <img alt="selsila-world" loading="lazy" decoding="async" data-nimg="fill" src={selsilaBrandLogo} style={{ position: 'absolute', height: '100%', width: '100%', inset: 0, color: 'transparent' }} />
-            </div>
           </div>
         </div>
       </div>

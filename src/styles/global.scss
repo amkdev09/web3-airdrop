@@ -280,3 +280,217 @@ select:-webkit-autofill:active {
         transform: scale(0.9);
     }
 }
+
+/* Wallet icon support carousel (horizontal marquee + parallax-like motion) */
+.wallet-support-carousel {
+    position: relative;
+    overflow: hidden;
+    padding: 24px 0;
+    --parallax-x: 0px;
+    --parallax-y: 0px;
+    --item-size: 60px;
+    --item-gap: 26px;
+    min-height: calc(var(--item-size) + 32px);
+    user-select: none;
+    -webkit-mask-image: linear-gradient(90deg,
+            transparent 0%,
+            #000 10%,
+            #000 90%,
+            transparent 100%);
+    mask-image: linear-gradient(90deg,
+            transparent 0%,
+            #000 10%,
+            #000 90%,
+            transparent 100%);
+}
+
+.wallet-support-carousel__fade {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.wallet-support-carousel__layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transform: translate3d(var(--parallax-x), var(--parallax-y), 0);
+}
+
+.wallet-support-carousel__track {
+    display: flex;
+    align-items: center;
+    gap: var(--item-gap);
+    width: max-content;
+    will-change: transform;
+}
+
+.wallet-support-carousel__track {
+    animation: walletMarquee 26s linear infinite;
+}
+
+@keyframes walletMarquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.wallet-support-carousel__item {
+    flex: 0 0 auto;
+    width: var(--item-size);
+    height: var(--item-size);
+    border-radius: 20px;
+    border: 1px solid rgba(190, 135, 255, 0.28);
+    background: transparent;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(10px);
+    transition: transform 220ms var(--ease-out), border-color 220ms var(--ease-out);
+}
+
+.wallet-support-carousel__item--front {
+    opacity: 0.95;
+    border-color: rgba(0, 156, 143, 0.22);
+    transform: translateZ(18px) scale(1);
+}
+
+.wallet-support-carousel__item--back {
+    opacity: 0.55;
+    filter: blur(0.4px);
+    border-color: rgba(190, 135, 255, 0.18);
+    transform: translateZ(6px) scale(0.94);
+}
+
+.wallet-support-carousel__item img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: drop-shadow(0px 6px 16px rgba(0, 0, 0, 0.35));
+}
+
+.wallet-support-carousel__item--fallback {
+    font-family: var(--font-spinnaker);
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 640px) {
+    .wallet-support-carousel {
+        --item-size: 54px;
+        --item-gap: 20px;
+        padding: 20px 0;
+    }
+
+    .wallet-support-carousel__item img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .wallet-support-carousel__item--back img {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wallet-support-carousel__track {
+        animation: none !important;
+    }
+}
+
+.team-radio-group {
+    --glider-ring: 2px;
+
+    display: flex;
+    position: relative;
+    background: var(--bg);
+    border-radius: 14px;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    gap: 20px;
+
+    input {
+        display: none;
+    }
+
+    label {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        padding: 0.8rem 1.6rem;
+        cursor: pointer;
+        font-weight: 600;               
+        letter-spacing: 0.3px;
+        color: var(--text);
+        position: relative;
+        z-index: 2;
+        transition: color 0.3s ease-in-out;
+        border-radius: 50px;
+        border: 2px solid #ffffff50;
+    }
+
+    label:hover {
+        color: white;
+    }
+
+    input:checked+label {
+        color: #fff;
+    }
+
+    .glass-glider {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: calc(50% - 10px);
+        border-radius: 50px;
+        z-index: 1;
+        transition:
+            transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56),
+            background 0.4s ease-in-out,
+            box-shadow 0.4s ease-in-out;
+    }
+
+    /*
+     * Gradient ring: parent has gradient bg + padding = ring thickness.
+     * ::after must use inset: same as padding — inset: 0 covers the padding box and hides the ring.
+     */
+    input:first-of-type:checked~.glass-glider,
+    input:last-of-type:checked~.glass-glider {
+        background: linear-gradient(90deg, #39ff14, #00f5d4);
+        padding: var(--glider-ring);
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    input:first-of-type:checked~.glass-glider::after,
+    input:last-of-type:checked~.glass-glider::after {
+        content: "";
+        position: absolute;
+        inset: var(--glider-ring);
+        border-radius: calc(50px - var(--glider-ring));
+        background: #04042b;
+        backdrop-filter: blur(12px);
+    }
+
+    input:first-of-type:checked~.glass-glider {
+        transform: translateX(0%);
+    }
+
+    input:last-of-type:checked~.glass-glider {
+        transform: translateX(calc(100% + 20px));
+    }
+}

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useSnackbar from "../../hooks/useSnackbar";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
-import getMetaMaskSDK from "../../lib/metamaskSDK.js";
 import { CiWallet } from "react-icons/ci";
 import userServices from "../../services/userServices";
 import { useQuery } from "@tanstack/react-query";
@@ -27,31 +26,7 @@ export default function ProfilePage() {
     const handleLogoutConfirm = useCallback(async () => {
         setLogoutLoading(true);
         try {
-            const MMSDK = getMetaMaskSDK();
-            const provider = MMSDK?.getProvider ? MMSDK.getProvider() : null;
-
-            // Best-effort revoke; not all environments support this method.
-            if (provider?.request) {
-                try {
-                    await provider.request({
-                        method: 'wallet_revokePermissions',
-                        params: [{ eth_accounts: {} }],
-                    });
-                } catch {
-                    // Ignore revoke failures and still clear local session.
-                }
-            }
-
-            // Terminate the SDK session where supported (desktop/mobile).
-            if (MMSDK?.terminate) {
-                try {
-                    MMSDK.terminate();
-                } catch {
-                    // Ignore SDK termination failures.
-                }
-            }
-
-            clearAddress();
+            await clearAddress();
             showSnackbar("Disconnected successfully.", "success");
             setLogoutModalOpen(false);
             navigate("/connect-metamask", { replace: true });

@@ -12,12 +12,13 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@metamask/sdk": "^0.34.0",
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.21",
+    "@web3modal/wagmi": "^5.1.11",
     "@tanstack/react-virtual": "^3.13.18",
+    "@walletconnect/ethereum-provider": "^2.23.8",
     "axios": "^1.13.2",
     "crypto-js": "^4.2.0",
     "js-cookie": "^3.0.5",
@@ -26,6 +27,8 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.11.0",
     "sass": "^1.97.2",
+    "viem": "^2.21.4",
+    "wagmi": "^2.12.9",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {

@@ -26,6 +26,14 @@ api.interceptors.request.use(
           cipherText = storedAddress;
         }
         address = decryptData(cipherText);
+        // Fallback: plain checksum address if decrypt failed (misconfigured key or legacy cookie)
+        if (
+          !address &&
+          typeof cipherText === "string" &&
+          /^0x[a-fA-F0-9]{40}$/.test(cipherText)
+        ) {
+          address = cipherText;
+        }
       }
       const isRegistered = Cookies.get("isRegistered") === "true";
       const isPost = config.method?.toLowerCase() === "post";

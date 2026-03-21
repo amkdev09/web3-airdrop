@@ -120,18 +120,15 @@ export default function InvestPage() {
                 <div className="relative w-full h-full">
                     <img loading="lazy" className="object-cover" src={abstractDistant} />
                 </div>
-                <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
-                    <div className="grid grid-cols-2 gap-4 mb-5">
-                        <div className="flex items-center">
-                            <p className="text-base text-[#D9D9D9]">Amk</p>
-                        </div>
-                        <p className="font-wavacorp text-lg tracking-[0.15em]">UltraDefi</p>
-                    </div>
-                    <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
+                <div className="absolute inset-0 p-4 flex justify-between">
+                    <div className="space-y-0.5 sm:space-y-2">
                         <p className="text-sm text-gray-400 capitalize">{selectedInvest === "invest" ? "Invested" : "Available Income"}</p>
                         <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : selectedInvest === "invest" ? vaultSummary?.invested ? `$${vaultSummary?.invested}` : "$0" : vaultSummary?.availableIncome ? `$${vaultSummary?.availableIncome}` : "$0"}</p>
                     </div>
-                    <div className="mt-auto flex justify-end text-sm">
+                    <div className="mb-5">
+                        <p className="font-wavacorp text-base tracking-[0.15em]">UltraDefi</p>
+                    </div>
+                    {/* <div className="absolute bottom-6 right-6 mt-auto flex justify-end text-sm">
                         <button className="flex items-center gap-1 text-[#D9D9D9] text-sm cursor-pointer" id="headlessui-menu-button-«r2»" type="button" aria-haspopup="menu" aria-expanded="false" data-headlessui-state="">
                             Currency
                             <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--line-md" width="1em" height="1em" viewBox="0 0 24 24">
@@ -140,7 +137,7 @@ export default function InvestPage() {
                                 </path>
                             </svg>
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className="flex my-5 items-center gap-2 text-[#D9D9D9] text-sm cursor-pointer h-14 border border-white/5 bg-white/10 backdrop-blur-md w-full rounded-xl px-3">

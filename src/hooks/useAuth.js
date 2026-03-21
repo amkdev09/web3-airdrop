@@ -1,37 +1,56 @@
-import { useCallback } from 'react';
-import { decryptData } from '../utils/encryption';
-import Cookies from 'js-cookie';
+import { useCallback, useMemo } from "react";
+import Cookies from "js-cookie";
+import useWallet from "../wallet/useWallet";
+import { decryptData, encryptData } from "../utils/encryption";
 
 const useAuth = () => {
-  const storedAddress = Cookies.get("address");
+  const { currentAddress, disconnectWallet, status } = useWallet();
+  const storedAddressCipher = Cookies.get("address");
 
-  let address = null;
-  if (storedAddress) {
+  const storedAddress = useMemo(() => {
+    if (!storedAddressCipher) return null;
+
     // Handle both legacy unencoded values and new encodeURIComponent values
-    let cipherText = storedAddress;
+    let cipherText = storedAddressCipher;
     try {
-      cipherText = decodeURIComponent(storedAddress);
+      cipherText = decodeURIComponent(storedAddressCipher);
     } catch {
-      // If it's not URI-encoded, just use the raw value
-      cipherText = storedAddress;
+      cipherText = storedAddressCipher;
     }
-    address = decryptData(cipherText);
-  }
 
-  const clearAddress = useCallback(() => {
+    const decrypted = decryptData(cipherText);
+    if (decrypted) return decrypted;
+    if (typeof cipherText === "string" && /^0x[a-fA-F0-9]{40}$/.test(cipherText)) {
+      return cipherText;
+    }
+    return null;
+  }, [storedAddressCipher]);
+
+  // If wagmi is *disconnected*, treat wallet as disconnected (even if cookie lingers).
+  // If wagmi is connecting/reconnecting, allow cookie address as a transitional fallback.
+  const resolvedAddress =
+    currentAddress ?? (status !== "disconnected" ? storedAddress : null);
+
+  const clearAddress = useCallback(async () => {
+    await disconnectWallet();
     Cookies.remove("address");
     Cookies.remove("isRegistered");
-  }, []);
+  }, [disconnectWallet]);
 
-  const refferalLink = useCallback(() => {
-    return storedAddress ? `${window.location.origin}/?ref=${storedAddress}` : null;
-  }, [storedAddress]);
+  const refferalLink = useMemo(() => {
+    if (storedAddressCipher) return `${window.location.origin}/?ref=${storedAddressCipher}`;
+    if (currentAddress) {
+      const encrypted = encodeURIComponent(encryptData(currentAddress));
+      return `${window.location.origin}/?ref=${encrypted}`;
+    }
+    return null;
+  }, [storedAddressCipher, currentAddress]);
 
   return {
     isRegistered: Cookies.get("isRegistered") === "true",
-    address: address,
+    address: resolvedAddress,
     clearAddress,
-    refferalLink: refferalLink(),
+    refferalLink,
   };
 };
 

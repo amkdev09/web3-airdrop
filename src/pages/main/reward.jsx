@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import iphone from "../../assets/images/iphone16.webp";
 import userServices from "../../services/userServices";
 import { fetchAndBroadcast, ERROR_USER_REJECTED } from "../../lib/broadcastTransaction";
 import useSnackbar from "../../hooks/useSnackbar";
@@ -70,7 +69,7 @@ export default function RewardPage() {
                 <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">REWARD</h1>
                 <p className="text-center text-base leading-6">Invite your friends and earn big! For every 10 successful invitations, you'll get a chance to win in our exclusive gifts. Don't miss out &amp; start inviting now!</p>
             </div>
-            <div className="mt-10">
+            {/* <div className="mt-10">
                 <div>
                     <div className="relative flex flex-col border border-emerald-400/10 bg-gradient-to-tr from-slate-900/80 via-slate-800/from-slate-900/80 to-slate-900/from-slate-900/80 backdrop-blur-md p-5 rounded-2xl sm:p-6">
                         <div className="flex justify-end">
@@ -148,7 +147,7 @@ export default function RewardPage() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="mt-8 grid grid-cols-1 gap-4">
                 <div className="rounded-xl border border-cyan-400/20 bg-gradient-to-br from-slate-900/90 to-slate-800/50 backdrop-blur-md p-5">

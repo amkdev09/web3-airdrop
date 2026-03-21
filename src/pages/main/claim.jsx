@@ -75,24 +75,23 @@ export default function ClaimPage() {
                 <div className="relative w-full h-full">
                     <img loading="lazy" className="object-cover" src={abstractDistant} />
                 </div>
-                <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
-                    <div className="grid grid-cols-2 gap-4 mb-5">
-                        <div className="flex items-center">
-                            <p className="text-base text-[#D9D9D9]">Amk</p>
+                <div className="absolute inset-0 p-4 flex justify-between">
+                    <div className="flex items-start flex-col">
+                        <div className="space-y-0.5 sm:space-y-2">
+                            <p className="text-sm text-gray-400 capitalize">{selectedClaim === "income" ? "Income" : "Capital Income"}</p>
+                            <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : amountToClaim ? `$${amountToClaim}` : "$0"}</p>
                         </div>
-                        <p className="font-wavacorp text-lg tracking-[0.15em]">UltraDefi</p>
+                        {selectedClaim === "capitalIncome" &&
+                            <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
+                                <p className="text-sm text-gray-400 capitalize">Cycle number</p>
+                                <p className="text-lg sm:text-2xl text-[#D9D9D9]">{isLoading ? "Loading..." : cycleIndex ? `${cycleIndex}` : "0"}</p>
+                            </div>
+                        }
                     </div>
-                    <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
-                        <p className="text-sm text-gray-400 capitalize">{selectedClaim === "income" ? "Income" : "Capital Income"}</p>
-                        <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : amountToClaim ? `$${amountToClaim}` : "$0"}</p>
+                    <div className="mb-5">
+                        <p className="font-wavacorp text-base tracking-[0.15em]">UltraDefi</p>
                     </div>
-                    {selectedClaim === "capitalIncome" &&
-                        <div className="space-y-0.5 sm:space-y-2 mt-4 sm:mt-5">
-                            <p className="text-sm text-gray-400 capitalize">Cycle number</p>
-                            <p className="text-lg sm:text-2xl text-[#D9D9D9]">{isLoading ? "Loading..." : cycleIndex ? `${cycleIndex}` : "0"}</p>
-                        </div>
-                    }
-                    <div className="absolute bottom-6 right-6 mt-auto flex justify-end text-sm">
+                    {/* <div className="absolute bottom-6 right-6 mt-auto flex justify-end text-sm">
                         <button className="flex items-center gap-1 text-[#D9D9D9] text-sm cursor-pointer" id="headlessui-menu-button-«r2»" type="button" aria-haspopup="menu" aria-expanded="false" data-headlessui-state="">
                             Currency
                             <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--line-md" width="1em" height="1em" viewBox="0 0 24 24">
@@ -101,7 +100,7 @@ export default function ClaimPage() {
                                 </path>
                             </svg>
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className="flex my-5 items-center gap-2 text-[#D9D9D9] text-sm cursor-pointer h-14 border border-white/5 bg-white/10 backdrop-blur-md w-full rounded-xl px-3">
