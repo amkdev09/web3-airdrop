@@ -1,14 +1,12 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
 import useSnackbar from "../../hooks/useSnackbar";
-import metaMaskIcon from "../../assets/svg/metamask.svg";
+import useWallet from "../../wallet/useWallet";
 import userService from "../../services/userServices";
 import { fetchAndBroadcast, ERROR_USER_REJECTED } from "../../lib/broadcastTransaction";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
-import getMetaMaskSDK from "../../lib/metamaskSDK";
-import { encryptData } from "../../utils/encryption";
 import Cookies from "js-cookie";
+import WalletSupportCarousel from "../../components/WalletSupportCarousel";
 
 const META_MASK_DOWNLOAD_URL = "https://metamask.io/download/";
 const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
@@ -16,72 +14,53 @@ const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 export default function ConnectMetamask() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { address } = useAuth();
     const { showSnackbar } = useSnackbar();
+    const {
+        currentAddress: address,
+        isConnected,
+        chainId,
+        isConnecting,
+        connectWallet,
+        disconnectWallet,
+    } = useWallet();
 
     const [searchParams] = useSearchParams();
     const from = location.state?.from?.pathname || "/";
     const reason = location.state?.reason || searchParams.get("reason") || null;
     const referralId = location.state?.referralId || null;
 
-    const [isConnecting, setIsConnecting] = useState(false);
     const [error, setError] = useState(null);
     const [needsRegistration, setNeedsRegistration] = useState(false);
     const [sponsorAddress, setSponsorAddress] = useState("");
     const [isRegistering, setIsRegistering] = useState(false);
     const [registerError, setRegisterError] = useState(null);
 
-    const handleConnect = useCallback(async () => {
+    const hasHandledConnectionRef = useRef(false);
+
+    const handleConnect = useCallback(() => {
         setError(null);
-        setIsConnecting(true);
-        try {
-            const MMSDK = getMetaMaskSDK();
-            const accounts = await MMSDK.connect();
-            if (accounts?.length > 0) {
-                const connectedAddress = accounts[0];
-                Cookies.set("address", encodeURIComponent(encryptData(connectedAddress)));
-                showSnackbar("Wallet connected successfully", "success");
-                // If user was forced here because registration is required,
-                // check registration status after connecting. Otherwise,
-                // just return to the previous / main page.
-                const userSummary = await userService.getVaultSummary();
-                if (userSummary?.registered) {
-                    Cookies.set("isRegistered", "true");
-                    navigate(from, { replace: true });
-                    showSnackbar("Wallet connected", "success");
-                } else {
-                    setNeedsRegistration(true);
-                }
-                return connectedAddress;
-            }
-        } catch (err) {
-            const message =
-                err.message === "Connection rejected by user"
-                    ? "Connection was rejected"
-                    : err.message?.includes("not installed")
-                        ? "MetaMask is not installed"
-                        : err.message || "Failed to connect wallet";
-            setError(message);
-            showSnackbar(message, "error");
-        } finally {
-            setIsConnecting(false);
-        }
-    }, [showSnackbar, from, navigate, reason]);
+        connectWallet();
+    }, [connectWallet]);
 
     useEffect(() => {
         if (referralId) setSponsorAddress(referralId);
     }, [referralId]);
 
     useEffect(() => {
-        // If a wallet is already connected (address is in cookies) and the
-        // user was redirected here because registration is required,
-        // check their registration status once on mount.
-        const checkExistingConnection = async () => {
+        // Reset the guard if user disconnects and re-connects.
+        if (!isConnected) hasHandledConnectionRef.current = false;
+    }, [isConnected]);
+
+    useEffect(() => {
+        const runAfterConnect = async () => {
             try {
+                showSnackbar("Wallet connected successfully", "success");
+
                 const userSummary = await userService.getVaultSummary();
                 if (userSummary?.registered) {
                     Cookies.set("isRegistered", "true");
                     navigate(from, { replace: true });
+                    showSnackbar("Wallet connected", "success");
                 } else {
                     setNeedsRegistration(true);
                 }
@@ -91,10 +70,13 @@ export default function ConnectMetamask() {
             }
         };
 
-        if (reason === "required-registration" && address) {
-            checkExistingConnection();
-        }
-    }, [reason, address, navigate, from]);
+        if (!isConnected || !address) return;
+        if (hasHandledConnectionRef.current) return;
+        hasHandledConnectionRef.current = true;
+
+        // Handles both the "manual connect" flow and auto-restore on refresh.
+        runAfterConnect();
+    }, [isConnected, address, from, navigate, reason, showSnackbar]);
 
     const handleRegister = useCallback(async () => {
         const trimmed = sponsorAddress?.trim();
@@ -106,7 +88,7 @@ export default function ConnectMetamask() {
             showSnackbar("Invalid wallet address format", "error");
             return;
         }
-        if (!address) {
+        if (!address || !isConnected) {
             showSnackbar("Connect your wallet first", "error");
             return;
         }
@@ -136,12 +118,42 @@ export default function ConnectMetamask() {
         } finally {
             setIsRegistering(false);
         }
-    }, [sponsorAddress, address, navigate, from, showSnackbar]);
+    }, [sponsorAddress, address, isConnected, navigate, from, showSnackbar]);
 
     const handleRetry = useCallback(() => {
         setError(null);
         handleConnect();
     }, [handleConnect]);
+
+    const shortenAddress = (addr) => {
+        if (!addr) return "";
+        if (addr.length < 12) return addr;
+        return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+    };
+
+    const chainLabel =
+        chainId === 56
+            ? "BSC"
+            : chainId === 137
+                ? "Polygon"
+                : chainId === 1
+                    ? "Ethereum"
+                    : chainId
+                        ? `Chain ${chainId}`
+                        : "Unknown";
+
+    const handleDisconnectClick = useCallback(async () => {
+        try {
+            hasHandledConnectionRef.current = false;
+            setNeedsRegistration(false);
+            setRegisterError(null);
+            setError(null);
+            await disconnectWallet();
+            showSnackbar("Disconnected successfully.", "success");
+        } catch {
+            showSnackbar("Disconnect failed. Please try again.", "error");
+        }
+    }, [disconnectWallet, showSnackbar]);
 
     return (
         <main className="max-w-120 w-full mx-auto">
@@ -156,7 +168,7 @@ export default function ConnectMetamask() {
                         Connect Wallet
                     </h2>
                     <p className="text-gray-400 mt-2">
-                        Connect with MetaMask to access your account
+                        Connect with a wallet (MetaMask, WalletConnect, Coinbase, Injected, etc.)
                     </p>
                 </div>
 
@@ -164,16 +176,36 @@ export default function ConnectMetamask() {
                     <button
                         type="button"
                         onClick={handleConnect}
-                        disabled={isConnecting || address}
+                        disabled={isConnecting || isConnected}
                         className="w-full py-3 px-4 bg-[var(--color-selsila-green)] text-white font-semibold rounded-lg hover:bg-[var(--color-selsila-green)]/90 focus:outline-none focus:ring-2 focus:ring-selsila-green focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
                     >
-                        <figure className="w-6 h-6 shrink-0">
-                            <img src={metaMaskIcon} alt="MetaMask" />
-                        </figure>
                         <span>
-                            {isConnecting ? "Connecting…" : address ? "Connected" : "Connect with MetaMask"}
+                            {isConnecting
+                                ? "Connecting…"
+                                : isConnected
+                                    ? `Connected (${shortenAddress(address)})`
+                                    : "Connect Wallet"}
                         </span>
                     </button>
+
+                    {isConnected && address && (
+                        <div className="rounded-lg border border-[var(--color-gray-600)] bg-gray-800/30 p-4 text-sm text-gray-400">
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="min-w-0">
+                                    <p className="text-gray-300 font-medium">Wallet</p>
+                                    <p className="mt-1 text-xs break-all text-gray-400">{shortenAddress(address)}</p>
+                                    <p className="mt-1 text-xs text-gray-500">Network: {chainLabel}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleDisconnectClick}
+                                    className="shrink-0 px-3 py-2 rounded-lg border border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 transition-colors"
+                                >
+                                    Disconnect
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     {error && (
                         <div
@@ -233,22 +265,17 @@ export default function ConnectMetamask() {
                         </button>
                     </div>
                 )}
+
+                <div className="mt-2">
+                    <p className="text-gray-400 text-sm font-medium mb-3">Supported wallets</p>
+                    <WalletSupportCarousel />
+                </div>
+
                 <div className="rounded-lg border border-[var(--color-gray-600)] bg-gray-800/30 p-4 text-sm text-gray-400">
-                    <p className="font-medium text-gray-300 mb-1">New to MetaMask?</p>
+                    <p className="font-medium text-gray-300 mb-1">New to wallets?</p>
                     <p className="mb-3">
-                        MetaMask is a crypto wallet for your browser and phone. Install it to connect in one click on desktop or mobile.
+                        Choose your preferred wallet via Web3Modal. If you&apos;re on desktop and don&apos;t have one installed, MetaMask is a popular option.
                     </p>
-                    <a
-                        href={META_MASK_DOWNLOAD_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-[var(--color-selsila-green)] hover:text-[var(--color-selsila-green)]/80 font-medium transition-colors"
-                    >
-                        <figure className="w-8 h-8 shrink-0">
-                            <img src={metaMaskIcon} alt="MetaMask" />
-                        </figure>
-                        Download MetaMask
-                    </a>
                 </div>
             </div>
         </main>

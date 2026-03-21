@@ -17,7 +17,6 @@ const ConfirmationModal = ({
   description,
   okText = "OK",
   cancelText = "Cancel",
-  confirmColor = "primary",
   loading = false,
 }) => {
 

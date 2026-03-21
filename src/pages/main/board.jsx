@@ -1,4 +1,4 @@
-import React, { useRef, memo } from "react";
+import React from "react";
 import adsBanner from "../../assets/images/ads-banner-3.webp"
 import userProfile from '../../assets/images/userProfile.webp'
 
