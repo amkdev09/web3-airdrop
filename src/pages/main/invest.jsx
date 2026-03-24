@@ -15,9 +15,9 @@ export default function InvestPage() {
     const [amount, setAmount] = useState(1);
     const [useOneDayCycle, setUseOneDayCycle] = useState(false);
 
-    const [selectedInvest, setSelectedInvest] = useState("invest");
-    const handleSelectInvest = (invest) => {
-        setSelectedInvest(invest);
+    const [selectedInvest, setSelectedInvest] = useState("deposit");
+    const handleSelectInvest = (deposit) => {
+        setSelectedInvest(deposit);
     };
 
     const [investLoading, setInvestLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function InvestPage() {
         } catch (err) {
             const message = err?.code === ERROR_USER_REJECTED
                 ? "Transaction was rejected."
-                : err?.message ?? "Invest failed. Please try again.";
+                : err?.message ?? "Deposit failed. Please try again.";
             showSnackbar(message, "error");
         } finally {
             setInvestLoading(false);
@@ -66,7 +66,7 @@ export default function InvestPage() {
             return;
         }
         if (!vaultSummary?.invested || Number(vaultSummary.invested) <= 0) {
-            showSnackbar("No invested amount available to reinvest.", "error");
+            showSnackbar("No invested amount available to redeposit.", "error");
             return;
         }
         setInvestLoading(true);
@@ -74,12 +74,12 @@ export default function InvestPage() {
             const amountToReinvest = Number(vaultSummary.invested);
             const fetchTx = () => userServices.reinvest({ amount: amountToReinvest, useOneDayCycle });
             const txHash = await fetchAndBroadcast(fetchTx, address);
-            showSnackbar("Reinvest submitted. Hash: " + txHash.slice(0, 10) + "...", "success");
+            showSnackbar("Redeposit submitted. Hash: " + txHash.slice(0, 10) + "...", "success");
             queryClient.invalidateQueries({ queryKey: ["vaultSummary", address] });
         } catch (err) {
             const message = err?.code === ERROR_USER_REJECTED
                 ? "Transaction was rejected."
-                : err?.message ?? "Reinvest failed. Please try again.";
+                : err?.message ?? "Redeposit failed. Please try again.";
             showSnackbar(message, "error");
         } finally {
             setInvestLoading(false);
@@ -94,26 +94,26 @@ export default function InvestPage() {
                 </button>
             </div>
             <div className="space-y-3 -mt-3">
-                <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Invest</h1>
-                <p className="text-center text-sm uppercase tracking-[0.3em]">Invest your tokens here</p>
+                <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Deposit</h1>
+                <p className="text-center text-sm uppercase tracking-[0.3em]">Deposit your tokens here</p>
             </div>
             <div className="glass-radio-group mt-5">
                 <input
                     type="radio"
                     name="plan"
                     id="glass-silver"
-                    checked={selectedInvest === "invest"}
-                    onChange={() => handleSelectInvest("invest")}
+                    checked={selectedInvest === "deposit"}
+                    onChange={() => handleSelectInvest("deposit")}
                 />
-                <label htmlFor="glass-silver">Invest</label>
+                <label htmlFor="glass-silver">Deposit</label>
                 <input
                     type="radio"
                     name="plan"
                     id="glass-platinum"
-                    checked={selectedInvest === "reinvest"}
-                    onChange={() => handleSelectInvest("reinvest")}
+                    checked={selectedInvest === "redeposit"}
+                    onChange={() => handleSelectInvest("redeposit")}
                 />
-                <label htmlFor="glass-platinum">Reinvest</label>
+                <label htmlFor="glass-platinum">Redeposit</label>
                 <div className="glass-glider"></div>
             </div>
             <div className="relative w-full overflow-hidden rounded-4xl border-[1.5px] border-selsila-purple mt-5">
@@ -122,8 +122,8 @@ export default function InvestPage() {
                 </div>
                 <div className="absolute inset-0 p-4 flex justify-between">
                     <div className="space-y-0.5 sm:space-y-2">
-                        <p className="text-sm text-gray-400 capitalize">{selectedInvest === "invest" ? "Invested" : "Available Income"}</p>
-                        <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : selectedInvest === "invest" ? vaultSummary?.invested ? `$${vaultSummary?.invested}` : "$0" : vaultSummary?.availableIncome ? `$${vaultSummary?.availableIncome}` : "$0"}</p>
+                        <p className="text-sm text-gray-400 capitalize">{selectedInvest === "deposit" ? "Invested" : "Available Income"}</p>
+                        <p className="text-2xl sm:text-4xl text-[#D9D9D9]">{isLoading ? "Loading..." : selectedInvest === "deposit" ? vaultSummary?.invested ? `$${vaultSummary?.invested}` : "$0" : vaultSummary?.availableIncome ? `$${vaultSummary?.availableIncome}` : "$0"}</p>
                     </div>
                     <div className="mb-5">
                         <p className="font-wavacorp text-base tracking-[0.15em]">UltraDefi</p>
@@ -148,7 +148,7 @@ export default function InvestPage() {
                 <p className="text-sm break-all">{address || "Wallet address not set."}</p>
             </div>
             <div>
-                {selectedInvest === "reinvest" ? (
+                {selectedInvest === "redeposit" ? (
                     <>
                         <div className="flex items-center justify-start">
                             <p className="text-sm text-gray-400 capitalize">
@@ -183,11 +183,11 @@ export default function InvestPage() {
                 )}
                 <button
                     type="button"
-                    onClick={selectedInvest === "invest" ? handleInvest : handleReinvest}
+                    onClick={selectedInvest === "deposit" ? handleInvest : handleReinvest}
                     disabled={investLoading}
                     className="w-full mt-5 bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                    {investLoading ? "Confirm in wallet…" : selectedInvest === "invest" ? "Invest" : "Reinvest"}
+                    {investLoading ? "Confirm in wallet…" : selectedInvest === "deposit" ? "Deposit" : "Redeposit"}
                 </button>
             </div>
         </main>

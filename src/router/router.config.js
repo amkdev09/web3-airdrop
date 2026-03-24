@@ -16,7 +16,7 @@ export const commonRouters = [
     component: asyncComponent(() => import("../pages/main/team.jsx")),
   },
   {
-    path: "/reward",
+    path: "/rank",
     isBottomNav: true,
     component: asyncComponent(() => import("../pages/main/reward.jsx")),
   },
@@ -34,15 +34,15 @@ export const protectedRouters = [
     component: asyncComponent(() => import("../pages/main/assets.jsx")),
   },
   {
-    path: "/claim",
+    path: "/withdraw",
     component: asyncComponent(() => import("../pages/main/claim.jsx")),
   },
   {
-    path: "/invest",
+    path: "/deposit",
     component: asyncComponent(() => import("../pages/main/invest.jsx")),
   },
   {
-    path: "/transaction-history",
+    path: "/transaction-logs",
     component: asyncComponent(() => import("../pages/main/transactionHistory.jsx")),
   },
 ];

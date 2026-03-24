@@ -2,8 +2,6 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import cryptoRoadmap from "../../assets/images/crypto-roadmap.png";
 import selsilaBrandLogo from "../../assets/images/sslogo.png";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import useSnackbar from "../../hooks/useSnackbar";
-import { decryptData } from "../../utils/encryption";
 import { useQuery } from "@tanstack/react-query";
 import userServices from "../../services/userServices";
 import { formatCompactNumber } from "../../utils/utils";
@@ -46,9 +44,7 @@ export default function Home() {
   const [searchParams] = useSearchParams();
 
   const referralId = searchParams.get("ref") || "";
-  const decryptedReferralId = referralId && decryptData(referralId);
 
-  const { showSnackbar } = useSnackbar();
   const [carouselIndex, setCarouselIndex] = useState(1);
 
   const touchStartX = useRef(0);
@@ -74,12 +70,10 @@ export default function Home() {
   const bnbPriceUsd = bnbPriceData ?? 0;
 
   const handleReferralReg = useCallback(() => {
-    if (decryptedReferralId) {
-      navigate(`/connect-metamask`, { state: { from: location.pathname, referralId: decryptedReferralId } });
-    } else if (referralId && !decryptedReferralId) {
-      showSnackbar("Invalid referral ID", "error");
+    if (referralId) {
+      navigate(`/connect-metamask`, { state: { from: location.pathname, referralId: referralId } });
     }
-  }, [decryptedReferralId, referralId, location.pathname, navigate, showSnackbar]);
+  }, [referralId, location.pathname, navigate]);
 
   useEffect(() => {
     handleReferralReg();
@@ -233,7 +227,7 @@ export default function Home() {
             <div className="space-y-6">
               <div className="max-w-2xl mx-auto relative">
                 <div className="px-5">
-                  <button onClick={() => navigate("/invest")} className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">
+                  <button onClick={() => navigate("/deposit")} className="w-full h-11 bg-[linear-gradient(180deg,#D9D9D9_0%,#009C8A_100%)] text-black uppercase text-base rounded-full border-0 relative z-10 shadow-lg transition-all duration-300 tracking-wider">
                     Start Investing
                   </button>
                 </div>

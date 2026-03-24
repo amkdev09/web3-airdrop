@@ -16,8 +16,8 @@ export default function ClaimPage() {
     const [selectedClaim, setSelectedClaim] = useState("income");
     const [claimLoading, setClaimLoading] = useState(false);
 
-    const handleSelectClaim = (claim) => {
-        setSelectedClaim(claim);
+    const handleSelectClaim = (withdraw) => {
+        setSelectedClaim(withdraw);
     };
 
     const { data, isLoading } = useQuery({
@@ -46,7 +46,7 @@ export default function ClaimPage() {
         } catch (err) {
             const message = err?.code === ERROR_USER_REJECTED
                 ? "Transaction was rejected."
-                : err?.message ?? "Claim failed. Please try again.";
+                : err?.message ?? "Withdraw failed. Please try again.";
             showSnackbar(message, "error");
         } finally {
             setClaimLoading(false);
@@ -61,8 +61,8 @@ export default function ClaimPage() {
                 </button>
             </div>
             <div className="space-y-3 -mt-3">
-                <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Claim</h1>
-                <p className="text-center text-sm uppercase tracking-[0.3em]">Claim your tokens here</p>
+                <h1 className="text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">Withdraw</h1>
+                <p className="text-center text-sm uppercase tracking-[0.3em]">Withdraw your tokens here</p>
             </div>
             <div className="glass-radio-group mt-5">
                 <input type="radio" name="plan" id="glass-silver" checked={selectedClaim === "income"} onChange={() => handleSelectClaim("income")} />
@@ -117,7 +117,7 @@ export default function ClaimPage() {
                     disabled={claimLoading}
                     className="w-full bg-gradient-to-b from-[rgba(255,135,149,0.7)] to-[rgba(0,156,138,0.7)] font-wavacorp uppercase tracking-widest text-sm sm:text-base h-14 rounded-xl shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                    {claimLoading ? "Confirm in wallet…" : "Claim"}
+                    {claimLoading ? "Confirm in wallet…" : "Withdraw"}
                 </button>
             </div>
         </main >

@@ -7,7 +7,7 @@ export default function Leaderboard() {
     <main className="max-w-120 w-full mx-auto pt-12 px-4">
       <div className="space-y-2 sm:space-y-4">
         <h1 className="text-2xl sm:text-3xl tracking-widest text-center font-wavacorp uppercase text-shadow-purple-green">leaderboard</h1>
-        <p className="text-center text-sm sm:text-base leading-6">Compete for a Top 3 Position to earn more Exclusive Reward.</p>
+        <p className="text-center text-sm sm:text-base leading-6">Compete for a Top 3 Position to earn more Exclusive Rank.</p>
       </div>
       <div className="space-y-8 mt-10">
         <div className="relative grid grid-cols-3 gap-2 sm:gap-4">

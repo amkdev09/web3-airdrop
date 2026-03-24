@@ -22,7 +22,7 @@ const NAV_ITEMS = [
     label: "Team",
   },
   {
-    path: "/reward",
+    path: "/rank",
     icon:
       <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--tabler text-2xl" width="1em" height="1em" viewBox="0 0 24 24">
         <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
@@ -30,7 +30,7 @@ const NAV_ITEMS = [
           <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7m2.5-4a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5a2.5 2.5 0 0 1 0 5"></path>
         </g>
       </svg>,
-    label: "Reward",
+    label: "Rank",
   },
   // {
   //   path: "/board",

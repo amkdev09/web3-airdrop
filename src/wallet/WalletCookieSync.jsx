@@ -2,7 +2,6 @@ import React, { useLayoutEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { useAccount } from "wagmi";
 import { isAddress } from "viem";
-import { encryptData } from "../utils/encryption";
 
 /**
  * Syncs wagmi account state into the legacy cookie format used by the API layer.
@@ -23,8 +22,7 @@ export default function WalletCookieSync() {
     if (isConnected && address && isAddress(address)) {
       wasConnectedRef.current = true;
       try {
-        const value = encodeURIComponent(encryptData(address));
-        Cookies.set("address", value, {
+        Cookies.set("address", address, {
           path: "/",
           sameSite: "Lax",
           secure: window.location.protocol === "https:",
@@ -32,7 +30,10 @@ export default function WalletCookieSync() {
       } catch (e) {
         // If encryption fails (e.g. missing VITE_CRYPTO_SECRET_KEY), still store checksum address
         // so API auth works; prefer fixing env in production.
-        console.warn("WalletCookieSync: encrypt failed, storing plain address", e);
+        console.warn(
+          "WalletCookieSync: encrypt failed, storing plain address",
+          e,
+        );
         Cookies.set("address", encodeURIComponent(address), {
           path: "/",
           sameSite: "Lax",
@@ -52,4 +53,3 @@ export default function WalletCookieSync() {
 
   return null;
 }
-
